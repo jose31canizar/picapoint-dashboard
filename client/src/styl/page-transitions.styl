@@ -1,4 +1,4 @@
-delay = 0s
+delay = 0.5s
 
 /* home page exit transition */
 .home.home-enter-done.transition-exit.transition-exit-active
@@ -16,7 +16,7 @@ delay = 0s
 
 /* profile page enter transition */
 .transition-enter.transition-enter-active
-  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 normal forwards
+  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
 
 /* home page enter transition */
 .home.home-enter.home-enter-active
@@ -24,14 +24,17 @@ delay = 0s
     for row in 1 .. 8
       :nth-child({row})
         .card-content
-          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+          transform scale(0)
+          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards
 
         .card-label
-          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+          transform scale(0)
+          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards
 
   .header
-    animation slide-over 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+    transform translate3d(100vw, 0, 0)
+    animation slide-over 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards
 
 /* profile page exit transition */
 .transition-enter-done.home-exit.home-exit-active
-  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards
+  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
