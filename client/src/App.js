@@ -95,7 +95,7 @@ class App extends Component {
                         path={`/${page.path}`}
                         panelState={this.state.panelState}
                         render={() => (
-                          <Page data={page.data} className={page.path} />
+                          <Page path={page.path} className={page.path} />
                         )}
                       />
                     ))}

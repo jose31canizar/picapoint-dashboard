@@ -152,10 +152,7 @@ module.exports = {
             test: /\.md$/,
             use: [
               {
-                loader: "babel-loader"
-              },
-              {
-                loader: "markdown-component-loader"
+                loader: "html-loader"
               },
               {
                 loader: "markdown-loader",

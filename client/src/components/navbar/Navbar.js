@@ -55,7 +55,7 @@ export default class Navbar extends Component {
               <option key={"option-" + i} value={page.title} />
             ))}
           </datalist>
-          <Link to="login">
+          <Link to="/">
             <FontAwesomeIcon icon={faTh} color="black" />
           </Link>
         </div>
