@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Menubar.styl";
-import BoardData from "../data/boards.json";
-import LinkBlock from "../components/LinkBlock/LinkBlock";
+import Pages from "../pages/Pages";
+import { Link } from "react-router-dom";
 
 export default class Menubar extends Component {
   render() {
@@ -19,8 +19,10 @@ export default class Menubar extends Component {
       >
         <div class="block-links">
           <h3>MENU</h3>
-          {BoardData.map((link, i) => (
-            <LinkBlock name={link.title} to={link.path} />
+          {Pages.map((link, i) => (
+            <Link to={link.path} key={"page-link" + i}>
+              {link.title}
+            </Link>
           ))}
         </div>
       </div>

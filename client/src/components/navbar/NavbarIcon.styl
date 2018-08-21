@@ -1,0 +1,102 @@
+menu-bar-icon-color = white
+menu-bar-icon-color-hover = #bca293
+transition-time = 0.25s
+icon-time = 0.7s
+hover-time = 0.5s
+transition-prop = all
+transition-easing = cubic-bezier(.94,.06,.32,.95)
+right-transition = 300px
+mobile-right-transition = 300px
+skinny-mobile-width = 700px
+
+
+transform-rotate-and-translate-down-and-right(a, b, c)
+  transform: translate3D(c, b, 0) rotate(a)
+
+transform-rotate-and-translate-up-and-right(a, b, c)
+  transform: translate3D(c, b, 0) rotate(a)
+
+transform-squash(a)
+  transform: scaleY(a) scaleX(a);
+
+.menu-bar-icon
+  transition: 0.5s ease
+  border: none;
+  background: transparent
+  color: menu-bar-icon-color
+  outline: none
+  user-select: none
+  position: absolute
+  cursor: pointer
+  left: 0
+  margin: 0
+  padding: 10px
+  // box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.5)
+  @media all and (max-width: 1200px)
+    z-index: 99999
+.clicked
+  transform: translate3D(right-transition, 0, 0);
+
+
+  @media all and (max-width: skinny-mobile-width)
+    transform: translate3D(mobile-right-transition, 0, 0);
+
+.unclicked
+  transform: translate3D(0vw, 0, 0)
+
+.menu-bar-icon:hover > div
+  transition: 0.5s ease
+  background: menu-bar-icon-color-hover
+
+.menu-bar-icon div
+  transition: 0.5s ease
+  width: 25px
+  height: 0.26em
+  background: menu-bar-icon-color
+  margin-top: 0.65em
+  margin-bottom: 0.6em
+
+.menu-bar-icon:hover > #top-bar
+  transition: 0.5s ease
+
+.menu-bar-icon:hover > #bottom-bar
+  transition: 0.5s ease
+
+.menu-bar-icon:hover > #middle-bar
+  transition: 0.5s ease
+
+.clicked > #top-bar
+  transition: 0.5s ease
+  transform-rotate-and-translate-down-and-right(45deg, 10px, 0)
+  @media all and (max-width: skinny-mobile-width)
+    transform-rotate-and-translate-down-and-right(45deg, 10px, 0)
+
+.clicked > #bottom-bar
+  transition: 0.5s ease
+  transform-rotate-and-translate-up-and-right(-45deg, -10px, 0)
+  @media all and (max-width: skinny-mobile-width)
+    transform-rotate-and-translate-up-and-right(-45deg, -10px, 0)
+
+.clicked > #middle-bar
+  transition: 0.5s ease
+  transform-squash(0)
+  transform: translate3D(0, 0, 0)
+  @media all and (max-width: skinny-mobile-width)
+    transform-translate-x(0)
+  opacity: 0
+
+.unclicked > #top-bar
+  transition: 0.5s ease
+  transform: translate3D(0, 0, 0)
+  transform-rotate-and-translate-down-and-right(0deg, 0px, 0vw)
+
+.unclicked > #bottom-bar
+  transition: 0.5s ease
+  transform: translate3D(0, 0, 0)
+  transform-rotate-and-translate-up-and-right(0deg, 0px, 0vw)
+
+.unclicked > #middle-bar
+  transition: 0.5s ease
+  transform-squash(0)
+  transform: translate3D(0, 0, 0)
+  opacity: 1

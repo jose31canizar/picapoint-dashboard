@@ -4,20 +4,26 @@ import { Router, Switch, Route } from "react-router-dom";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Layout from "./layout";
+import Pages from "./pages/Pages";
+import Page from "./pages/template/PageTemplate";
 
+// import { fab } from "@fortawesome/free-brands-svg-icons";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+
+// library.add(fab, faCircle);
+const timeout = 1000;
 
 const findTransition = route => {
   switch (route) {
     case "/":
       return {
         classNames: findTransitionName(route),
-        timeout: 1000
+        timeout: timeout
       };
     default:
       return {
         classNames: findTransitionName(route),
-        timeout: 1000
+        timeout: timeout
       };
   }
 };
@@ -26,15 +32,7 @@ const findTransitionName = route => {
   switch (route) {
     case "/":
       return "home";
-    case "/music":
-      return "transition";
-    case "/merch":
-      return "transition";
-    case "/podcasts":
-      return "transition";
-    case "/videos":
-      return "transition";
-    case "/login":
+    default:
       return "transition";
   }
 };
@@ -47,6 +45,7 @@ class App extends Component {
       currentRoute: history.location.pathname
     };
     this.togglePanel = this.togglePanel.bind(this);
+    this.authenticate = this.authenticate.bind(this);
 
     history.listen(location => {
       this.setState({ currentRoute: location.pathname });
@@ -57,9 +56,16 @@ class App extends Component {
       panelState: prevState.panelState === "closed" ? "open" : "closed"
     }));
   }
+  authenticate(username, password) {
+    console.log("authenticating...");
+    history.push("/");
+  }
   render() {
-    const classNames = "transition";
+    const classNames = findTransition(this.state.currentRoute);
     console.log(this.state.currentRoute);
+
+    const { authenticate } = this;
+
     return (
       <Router history={history}>
         <Layout
@@ -77,25 +83,27 @@ class App extends Component {
                 }
               >
                 <CSSTransition
-                  timeout={2000}
-                  classNames={classNames}
-                  key={location.key}
+                  timeout={timeout}
+                  classNames={findTransition(this.state.currentRoute)}
+                  key={location.pathname}
                 >
                   <Switch location={location}>
-                    {Boards.map((board, i) => (
+                    {Pages.map((page, i) => (
                       <Route
                         key={i}
                         exact
-                        path={`/${board.path}`}
+                        path={`/${page.path}`}
                         panelState={this.state.panelState}
-                        render={() => <Board data={board.data} />}
+                        render={() => (
+                          <Page data={page.data} className={page.path} />
+                        )}
                       />
                     ))}
                     <Route
                       exact
                       path="/login"
                       panelState={this.state.panelState}
-                      render={() => <Login />}
+                      render={() => <Login authenticate={authenticate} />}
                     />
                     <Route
                       path="*"

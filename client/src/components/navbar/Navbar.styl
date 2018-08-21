@@ -1,0 +1,57 @@
+transform-squash(a)
+  transform scaleY(a) scaleX(a)
+
+.nav-bar
+  border-bottom 2px solid #fff
+  display flex
+  justify-content space-between
+  align-items center
+  height 4rem
+  padding 1rem 10rem
+  position absolute
+  z-index 5
+  background white
+  width 100vw
+
+  .nav-bar-title
+    font-size 1.3em
+    letter-spacing 0.5em
+    transition 0.5s ease-in-out
+    backface-visibility hidden
+    white-space nowrap
+    transform translateZ(0)
+    font-weight 900
+    -webkit-font-smoothing subpixel-antialiased
+
+  label
+    display block
+    font-size 0.75em
+
+  .dashboard-button:before
+    content '\f1fa'
+
+  #nav-bar-search-button
+    flex 0.5
+
+.nav-bar-mobile
+  padding 10px
+  border-bottom 2px solid black
+  display flex
+  justify-content center
+  align-items center
+
+  h2
+    transition 0.15s ease
+    font-size 1.3em
+    letter-spacing 0.5em
+    color #a6d1ff
+    transition 0.5s ease-in-out
+    backface-visibility hidden
+    white-space nowrap
+    transform translateZ(0)
+    font-weight 900
+    -webkit-font-smoothing subpixel-antialiased
+    transform-squash(1)
+
+  .hide-nav-bar-title
+    transform-squash(0)

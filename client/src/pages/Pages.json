@@ -1,0 +1,59 @@
+[
+  {
+    "path": "profile",
+    "title": "Profile",
+    "image": "color-burst",
+    "color": "#ec6602",
+    "icon": "crown"
+  },
+  {
+    "path": "gallery",
+    "title": "merch",
+    "image": "color-burst",
+    "color": "#008A8C",
+    "icon": "image"
+  },
+  {
+    "path": "promotions",
+    "title": "Promotions",
+    "image": "color-burst",
+    "color": "#007CAD",
+    "icon": "bullhorn"
+  },
+  {
+    "path": "templates",
+    "title": "Maler",
+    "image": "color-burst",
+    "color": "#F79700",
+    "icon": "th-large"
+  },
+  {
+    "path": "print",
+    "title": "Print",
+    "image": "color-burst",
+    "color": "#5B7B92",
+    "icon": "sticky-note"
+  },
+  {
+    "path": "archive",
+    "title": "Maler",
+    "image": "color-burst",
+    "color": "#D18ED7",
+    "icon": "paperclip"
+  },
+
+  {
+    "path": "contact",
+    "title": "Contact",
+    "image": "color-burst",
+    "color": "#8368A0",
+    "icon": "users"
+  },
+  {
+    "path": "settings",
+    "title": "Settings",
+    "image": "color-burst",
+    "color": "#FB4E59",
+    "icon": "cog"
+  }
+]

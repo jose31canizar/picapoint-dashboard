@@ -1,0 +1,37 @@
+delay = 0s
+
+/* home page exit transition */
+.home.home-enter-done.transition-exit.transition-exit-active
+  .dashboard
+    for row in 1 .. 8
+      :nth-child({row})
+        .card-content
+          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
+
+        .card-label
+          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
+
+  .header
+    animation slide-over 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
+
+/* profile page enter transition */
+.transition-enter.transition-enter-active
+  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 normal forwards
+
+/* home page enter transition */
+.home.home-enter.home-enter-active
+  .dashboard
+    for row in 1 .. 8
+      :nth-child({row})
+        .card-content
+          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+
+        .card-label
+          animation disappear (0.07 * row)s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+
+  .header
+    animation slide-over 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+
+/* profile page exit transition */
+.transition-enter-done.home-exit.home-exit-active
+  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards

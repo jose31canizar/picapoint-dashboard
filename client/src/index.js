@@ -5,4 +5,4 @@ import App from "./App";
 import "./styl/globals.styl";
 
 ReactDOM.render(<App />, document.getElementById("root"));
-registerServiceWorker();
+// registerServiceWorker();
