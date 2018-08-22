@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./Login.styl";
 import InputField from "../../items/input-field/InputField";
-import Template from "../../pages/template/Template";
 import LoginButton from "../login-button/LoginButton";
 
 export default class Login extends Component {
@@ -20,7 +19,7 @@ export default class Login extends Component {
     console.log(authenticate.toString());
     const { username, password } = this.state;
     return (
-      <Template className="login">
+      <div className="page login">
         <section class="login-container">
           <h3>Merkevareportal</h3>
           <InputField
@@ -39,7 +38,7 @@ export default class Login extends Component {
           />
           <Link to="forgot-password">Glemt passord?</Link>
         </section>
-      </Template>
+      </div>
     );
   }
 }

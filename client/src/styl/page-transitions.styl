@@ -1,7 +1,10 @@
 delay = 0.5s
 
 /* home page exit transition */
-.home.home-enter-done.transition-exit.transition-exit-active
+.home.transition-exit.transition-exit-active
+  footer
+    animation disappear 0.56s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
+
   .dashboard
     for row in 1 .. 8
       :nth-child({row})
@@ -18,8 +21,19 @@ delay = 0.5s
 .transition-enter.transition-enter-active
   animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
 
+/*
+.transition-enter-done
+  position relative
+
+.home-enter-done
+  position relative
+*/
 /* home page enter transition */
 .home.home-enter.home-enter-active
+  footer
+    transform scale(0)
+    animation disappear 0.56s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards
+
   .dashboard
     for row in 1 .. 8
       :nth-child({row})
@@ -36,5 +50,5 @@ delay = 0.5s
     animation slide-over 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) delay 1 reverse forwards
 
 /* profile page exit transition */
-.transition-enter-done.home-exit.home-exit-active
+.home-exit.home-exit-active
   animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards

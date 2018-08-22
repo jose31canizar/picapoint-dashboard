@@ -3,7 +3,7 @@ import history from "./history";
 import { Router, Switch, Route } from "react-router-dom";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
-import Layout from "./layout";
+import Layout from "./layout/Layout";
 import Pages from "./pages/Pages";
 import Page from "./pages/template/PageTemplate";
 
@@ -65,6 +65,7 @@ class App extends Component {
     console.log(this.state.currentRoute);
 
     const { authenticate } = this;
+    const { panelState } = this.state;
 
     return (
       <Router history={history}>
@@ -102,12 +103,12 @@ class App extends Component {
                     <Route
                       exact
                       path="/login"
-                      panelState={this.state.panelState}
+                      panelState={panelState}
                       render={() => <Login authenticate={authenticate} />}
                     />
                     <Route
                       path="*"
-                      panelState={this.state.panelState}
+                      panelState={panelState}
                       render={() => <Home />}
                     />
                   </Switch>

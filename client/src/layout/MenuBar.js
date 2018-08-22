@@ -13,8 +13,8 @@ export default class Menubar extends Component {
           ...this.props.style,
           transform:
             panelState === "open"
-              ? "translate3d(0,0,0)"
-              : "translate3d(-300px,0,0)"
+              ? "translate3d(-300px,0,0)"
+              : "translate3d(0,0,0)"
         }}
       >
         <div class="block-links">

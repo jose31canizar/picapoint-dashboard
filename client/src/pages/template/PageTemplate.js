@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "./Template.styl";
+import "./PageTemplate.styl";
 import SmoothScroll from "../../components/smooth-scroll/SmoothScroll";
-
+import Footer from "../../layout/Footer";
 export default class PageTemplate extends Component {
   state = {
     markdown: "<p>loading...</p>"
@@ -21,7 +21,6 @@ export default class PageTemplate extends Component {
     const { markdown } = this.state;
     return (
       <div class={`page ${className}`} style={style && style}>
-        <h1>Page</h1>
         <section>
           <article dangerouslySetInnerHTML={{ __html: markdown }} />
           <aside>
@@ -33,12 +32,13 @@ export default class PageTemplate extends Component {
                 "dekorelement",
                 "trivselsgaranti"
               ].map((name, i) => (
-                <SmoothScroll section={name} key={i}>
+                <SmoothScroll section={name} key={i} className="smooth-scroll">
                   <li>{name}</li>
                 </SmoothScroll>
               ))}
             </ol>
           </aside>
+          <Footer />
         </section>
       </div>
     );

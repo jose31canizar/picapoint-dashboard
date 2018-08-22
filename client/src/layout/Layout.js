@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Menubar from "./Menubar";
-import "./index.styl";
+import "./Layout.styl";
 
 export default class Layout extends Component {
   render() {
@@ -11,8 +11,9 @@ export default class Layout extends Component {
           togglePanel={this.props.togglePanel}
           panelState={this.props.panelState}
         />
+        <div class="content">{this.props.children}</div>
+        <div class="background-layer" />
         <Menubar panelState={this.props.panelState} />
-        {this.props.children}
       </div>
     );
   }

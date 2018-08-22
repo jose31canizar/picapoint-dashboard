@@ -4,7 +4,8 @@ import SVG from "../../items/svg";
 import Pages from "../../pages/Pages";
 import { Link } from "react-router-dom";
 import Card from "../card/Card";
-import Template from "../../pages/template/Template";
+import PageTemplate from "../../pages/template/PageTemplate";
+import Footer from "../../layout/Footer";
 
 export default class Home extends Component {
   constructor(props) {
@@ -29,8 +30,14 @@ export default class Home extends Component {
     });
   }
   render() {
+    console.log(this.footer);
     return (
-      <Template className="home">
+      <div
+        className="page home"
+        style={{
+          paddingTop: document.body.scrollTop
+        }}
+      >
         <div class="header">
           <h2>Hei Bjørn! </h2>
           <p class="explanation">
@@ -49,7 +56,8 @@ export default class Home extends Component {
             />
           ))}
         </div>
-      </Template>
+        <Footer />
+      </div>
     );
   }
 }
