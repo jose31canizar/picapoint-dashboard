@@ -4,10 +4,17 @@ transform-squash(a)
 .nav-bar
   border-bottom 2px solid #fff
   display flex
-  justify-content space-between
   align-items center
   height 4rem
-  padding 1rem 10rem
+
+  @media all and (min-width: 1199px)
+    justify-content space-between
+    padding 1rem 25%
+
+  @media all and (max-width: 1200px)
+    justify-content space-evenly
+    padding 0
+
   position fixed
   z-index 5
   background white
@@ -40,11 +47,13 @@ transform-squash(a)
   justify-content center
   align-items center
 
+  a
+    margin-top 1rem
+
   h2
-    transition 0.15s ease
+    transition 0.05s ease
     font-size 1.3em
     letter-spacing 0.5em
-    color #a6d1ff
     transition 0.5s ease-in-out
     backface-visibility hidden
     white-space nowrap

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export default class Menubar extends Component {
   render() {
-    const { panelState } = this.props;
+    const { panelState, togglePanel } = this.props;
     return (
       <div
         class="menu-bar"
@@ -13,14 +13,14 @@ export default class Menubar extends Component {
           ...this.props.style,
           transform:
             panelState === "open"
-              ? "translate3d(-300px,0,0)"
-              : "translate3d(0,0,0)"
+              ? "translate3d(0,0,0)"
+              : "translate3d(300px,0,0)"
         }}
       >
         <div class="block-links">
           <h3>MENU</h3>
           {Pages.map((link, i) => (
-            <Link to={link.path} key={"page-link" + i}>
+            <Link to={link.path} key={"page-link" + i} onClick={togglePanel}>
               {link.title}
             </Link>
           ))}

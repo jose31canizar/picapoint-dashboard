@@ -19,17 +19,23 @@
   section
     display grid
     grid-template-columns 60% 40%
-    max-width 40rem
+    max-width 50rem
+
+    @media all and (max-width: 800px)
+      max-width 29rem
+
     margin 0 auto
     height 100%
 
     aside
       width 100%
+      margin-left 50%
+
+      @media all and (max-width: 800px)
+        margin-left 20%
 
       .sidebar-menu
         position fixed
-        width 100%
-        top 16rem
         border-left 1px solid #ec6602
 
         .smooth-scroll

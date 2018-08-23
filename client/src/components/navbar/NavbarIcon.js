@@ -2,44 +2,38 @@ import React, { Component } from "react";
 import "./NavbarIcon.styl";
 
 export default class NavbarIcon extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      MenuBarIconStyle: "menu-bar-icon unclicked"
-    };
-    this.toggleIcon = this.toggleIcon.bind(this);
-  }
+  state = {
+    style: "menu-bar-icon unclicked"
+  };
   toggleIcon() {
     this.setState((prevState, props) => {
       var newProp;
-      if (prevState.MenuBarIconStyle === "menu-bar-icon unclicked") {
-        newProp = "menu-bar-icon clicked";
+      if (prevState.style === "menu-bar-icon") {
+        newProp = "menu-bar-icon open";
       } else {
-        newProp = "menu-bar-icon unclicked";
+        newProp = "menu-bar-icon";
       }
       return {
-        MenuBarIconStyle: newProp
+        style: newProp
       };
     });
   }
   componentWillReceiveProps(props) {
-    console.log("updated");
     if (props.panelState === "open") {
-      this.setState({ MenuBarIconStyle: "menu-bar-icon clicked" });
+      this.setState({ style: "menu-bar-icon open" });
     } else {
-      this.setState({ MenuBarIconStyle: "menu-bar-icon unclicked" });
+      this.setState({ style: "menu-bar-icon" });
     }
   }
   render() {
+    const { style } = this.state;
     return (
-      <button
-        class={this.state.MenuBarIconStyle}
-        onMouseDown={this.props.togglePanel}
-      >
-        <div id="top-bar" />
-        <div id="middle-bar" />
-        <div id="bottom-bar" />
-      </button>
+      <div id="nav-icon" class={style} onMouseDown={this.props.togglePanel}>
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
     );
   }
 }

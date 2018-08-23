@@ -1,7 +1,12 @@
+.home
+  padding-top 1rem
 
 .explanation
   width 50%
   padding 3rem 0
+
+  @media all and (max-width: 800px)
+    max-width 30rem
 
 .header
   max-width 40rem
@@ -17,6 +22,7 @@
 
   // grid-template-rows repeat(auto-fill, minmax(9rem, 1fr))
   @media all and (max-width: 800px)
+    max-width 30rem
     height 100%
 
   transition transform time, opacity time

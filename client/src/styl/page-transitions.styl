@@ -1,5 +1,16 @@
 delay = 0.5s
 
+/* login, signup page exit transition */
+.login.transition-exit.transition-exit-active, .signup.transition-exit.transition-exit-active
+  animation disappear 0.24s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
+
+/* login, signup page enter transition */
+.signup.transition-enter.transition-enter-active, .login.transition-enter.transition-enter-active
+  animation slide-in 0.24s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards
+
+.transition-exit.transition-exit-active
+  animation slide-in 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 reverse forwards
+
 /* home page exit transition */
 .home.transition-exit.transition-exit-active
   footer

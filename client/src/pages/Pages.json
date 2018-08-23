@@ -4,42 +4,48 @@
     "title": "Profilguide",
     "image": "color-burst",
     "color": "#ec6602",
-    "icon": "crown"
+    "icon": "crown",
+    "type": "markdown"
   },
   {
     "path": "gallery",
     "title": "Bildearkiv",
     "image": "color-burst",
     "color": "#008A8C",
-    "icon": "image"
+    "icon": "image",
+    "type": "image-storage"
   },
   {
     "path": "promotions",
     "title": "Kampanjer",
     "image": "color-burst",
     "color": "#007CAD",
-    "icon": "bullhorn"
+    "icon": "bullhorn",
+    "type": "list"
   },
   {
     "path": "templates",
     "title": "Maler",
     "image": "color-burst",
     "color": "#F79700",
-    "icon": "th-large"
+    "icon": "th-large",
+    "type": "markdown"
   },
   {
     "path": "print",
     "title": "Trykksaker",
     "image": "color-burst",
     "color": "#5B7B92",
-    "icon": "sticky-note"
+    "icon": "sticky-note",
+    "type": "markdown"
   },
   {
     "path": "archive",
     "title": "Dokumentarkiv",
     "image": "color-burst",
     "color": "#D18ED7",
-    "icon": "paperclip"
+    "icon": "paperclip",
+    "type": "file-storage"
   },
 
   {
@@ -47,13 +53,15 @@
     "title": "Kontakter",
     "image": "color-burst",
     "color": "#8368A0",
-    "icon": "users"
+    "icon": "users",
+    "type": "markdown"
   },
   {
     "path": "settings",
     "title": "Innstillinger",
     "image": "color-burst",
     "color": "#FB4E59",
-    "icon": "cog"
+    "icon": "cog",
+    "type": "settings"
   }
 ]

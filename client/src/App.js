@@ -3,14 +3,12 @@ import history from "./history";
 import { Router, Switch, Route } from "react-router-dom";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
+import Signup from "./components/signup/Signup";
 import Layout from "./layout/Layout";
 import Pages from "./pages/Pages";
 import Page from "./pages/template/PageTemplate";
-
-// import { fab } from "@fortawesome/free-brands-svg-icons";
+import * as routes from "./constants/routes";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-
-// library.add(fab, faCircle);
 const timeout = 1000;
 
 const findTransition = route => {
@@ -30,7 +28,7 @@ const findTransition = route => {
 
 const findTransitionName = route => {
   switch (route) {
-    case "/":
+    case routes.HOME:
       return "home";
     default:
       return "transition";
@@ -58,34 +56,28 @@ class App extends Component {
   }
   authenticate(username, password) {
     console.log("authenticating...");
-    history.push("/");
+    history.push(routes.HOME);
   }
   render() {
     const classNames = findTransition(this.state.currentRoute);
     console.log(this.state.currentRoute);
 
-    const { authenticate } = this;
-    const { panelState } = this.state;
+    const { authenticate, togglePanel } = this;
+    const { panelState, currentRoute } = this.state;
 
     return (
       <Router history={history}>
-        <Layout
-          panelState={this.state.panelState}
-          togglePanel={this.togglePanel}
-        >
+        <Layout panelState={panelState} togglePanel={togglePanel}>
           <Route
             render={({ location }) => (
               <TransitionGroup
                 childFactory={child =>
-                  React.cloneElement(
-                    child,
-                    findTransition(this.state.currentRoute)
-                  )
+                  React.cloneElement(child, findTransition(currentRoute))
                 }
               >
                 <CSSTransition
                   timeout={timeout}
-                  classNames={findTransition(this.state.currentRoute)}
+                  classNames={findTransition(currentRoute)}
                   key={location.pathname}
                 >
                   <Switch location={location}>
@@ -102,9 +94,21 @@ class App extends Component {
                     ))}
                     <Route
                       exact
-                      path="/login"
+                      path={routes.LOG_IN}
                       panelState={panelState}
                       render={() => <Login authenticate={authenticate} />}
+                    />
+                    <Route
+                      exact
+                      path={routes.LOG_IN}
+                      panelState={panelState}
+                      render={() => <Login authenticate={authenticate} />}
+                    />
+                    <Route
+                      exact
+                      path={routes.SIGN_UP}
+                      panelState={panelState}
+                      render={() => <Signup />}
                     />
                     <Route
                       path="*"

@@ -20,7 +20,8 @@ export default class Navbar extends Component {
     super(props);
     this.state = {
       width: width,
-      panelState: this.props.panelState
+      panelState: this.props.panelState,
+      query: ""
     };
     this.handleResize = this.handleResize.bind(this);
   }
@@ -49,7 +50,13 @@ export default class Navbar extends Component {
           <Link to="/">
             <h2 class="nav-bar-title">Picapoint</h2>
           </Link>
-          <InputField placeholder="search" />
+          <InputField
+            placeholder="search"
+            label="filter"
+            field="query"
+            text="search your dashboard..."
+            setState={obj => this.setState(obj)}
+          />
           <datalist id="sections">
             {Pages.map((page, i) => (
               <option key={"option-" + i} value={page.title} />

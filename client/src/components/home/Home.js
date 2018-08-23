@@ -32,12 +32,7 @@ export default class Home extends Component {
   render() {
     console.log(this.footer);
     return (
-      <div
-        className="page home"
-        style={{
-          paddingTop: document.body.scrollTop
-        }}
-      >
+      <div className="page home">
         <div class="header">
           <h2>Hei Bjørn! </h2>
           <p class="explanation">
