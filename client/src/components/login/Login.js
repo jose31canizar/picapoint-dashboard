@@ -1,26 +1,50 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import "./Login.styl";
-import InputField from "../../items/input-field/InputField";
+import InputField, { byPropKey } from "../../items/input-field/InputField";
 import Button from "../../items/button/Button";
 import { SignUpLink } from "../signup/Signup";
+import { HOME } from "../../constants/routes";
+import { auth } from "../../firebase";
+const LoginPage = ({ history }) => <Login history={history} />;
 
-export default class Login extends Component {
+const INITIAL_STATE = {
+  email: "",
+  password: "",
+  error: null
+};
+
+class Login extends Component {
   state = {
-    username: "",
-    password: ""
+    ...INITIAL_STATE
+  };
+  authenticate = e => {
+    const { history } = this.props;
+    const { email, password } = this.state;
+    console.log("authenticating...");
+    console.log(email);
+    console.log(password);
+    auth
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
+        history.push(HOME);
+      })
+      .catch(error => {
+        this.setState(byPropKey("error", error));
+      });
+    e.preventDefault();
   };
   render() {
-    const { authenticate } = this.props;
-    console.log(authenticate.toString());
-    const { username, password } = this.state;
+    const { email, password, error } = this.state;
+    const { authenticate } = this;
     return (
       <div className="page login">
         <section class="container">
           <h3>Merkevareportal</h3>
           <InputField
-            value={username}
-            field="username"
+            value={email}
+            field="email"
             label="Brukernavn"
             type="text"
             placeholder="Din e-post-adresse"
@@ -34,10 +58,8 @@ export default class Login extends Component {
             placeholder="Passord"
             setState={obj => this.setState(obj)}
           />
-          <Button
-            action={() => authenticate(username, password)}
-            label="Logg Inn >>"
-          />
+          <Button action={e => authenticate(e)} label="Logg Inn >>" />
+          {error && <p>{error.message}</p>}
           <Link to="forgot-password">Glemt passord?</Link>
           <SignUpLink />
         </section>
@@ -45,3 +67,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default withRouter(LoginPage);

@@ -8,10 +8,7 @@ export default class Layout extends Component {
     const { panelState, togglePanel } = this.props;
     return (
       <div class="layout">
-        <Navbar
-          togglePanel={this.props.togglePanel}
-          panelState={this.props.panelState}
-        />
+        <Navbar togglePanel={togglePanel} panelState={panelState} />
         <div
           class="content"
           style={{ marginLeft: panelState === "open" ? -300 : 0 }}
@@ -19,7 +16,7 @@ export default class Layout extends Component {
           {this.props.children}
         </div>
         <div class="background-layer" />
-        <Menubar panelState={this.props.panelState} togglePanel={togglePanel} />
+        <Menubar panelState={panelState} togglePanel={togglePanel} />
       </div>
     );
   }

@@ -9,6 +9,8 @@ import Pages from "./pages/Pages";
 import Page from "./pages/template/PageTemplate";
 import * as routes from "./constants/routes";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import withAuthentication from "./components/withAuthentication";
+
 const timeout = 1000;
 
 const findTransition = route => {
@@ -36,34 +38,29 @@ const findTransitionName = route => {
 };
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      panelState: "closed",
-      currentRoute: history.location.pathname
-    };
-    this.togglePanel = this.togglePanel.bind(this);
-    this.authenticate = this.authenticate.bind(this);
-
+  state = {
+    panelState: "closed",
+    currentRoute: history.location.pathname
+  };
+  componentDidMount() {
     history.listen(location => {
-      this.setState({ currentRoute: location.pathname });
+      console.log(location);
+      this.setState({
+        currentRoute: location.pathname,
+        currentTransitionType: findTransition(location.pathname)
+      });
     });
   }
-  togglePanel() {
+  togglePanel = () => {
     this.setState((prevState, props) => ({
       panelState: prevState.panelState === "closed" ? "open" : "closed"
     }));
-  }
-  authenticate(username, password) {
-    console.log("authenticating...");
-    history.push(routes.HOME);
-  }
-  render() {
-    const classNames = findTransition(this.state.currentRoute);
-    console.log(this.state.currentRoute);
+  };
 
+  render() {
     const { authenticate, togglePanel } = this;
-    const { panelState, currentRoute } = this.state;
+    const { panelState, currentRoute, currentTransitionType } = this.state;
+    console.log(currentRoute);
 
     return (
       <Router history={history}>
@@ -72,12 +69,12 @@ class App extends Component {
             render={({ location }) => (
               <TransitionGroup
                 childFactory={child =>
-                  React.cloneElement(child, findTransition(currentRoute))
+                  React.cloneElement(child, currentTransitionType)
                 }
               >
                 <CSSTransition
                   timeout={timeout}
-                  classNames={findTransition(currentRoute)}
+                  classNames={currentTransitionType}
                   key={location.pathname}
                 >
                   <Switch location={location}>
@@ -96,13 +93,7 @@ class App extends Component {
                       exact
                       path={routes.LOG_IN}
                       panelState={panelState}
-                      render={() => <Login authenticate={authenticate} />}
-                    />
-                    <Route
-                      exact
-                      path={routes.LOG_IN}
-                      panelState={panelState}
-                      render={() => <Login authenticate={authenticate} />}
+                      render={() => <Login />}
                     />
                     <Route
                       exact
@@ -126,4 +117,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthentication(App);

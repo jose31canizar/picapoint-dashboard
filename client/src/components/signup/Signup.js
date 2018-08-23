@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import "./Signup.styl";
-import { HOME } from "../../constants/routes";
+import * as routes from "../../constants/routes";
 import { auth } from "../../firebase";
 import InputField, { byPropKey } from "../../items/input-field/InputField";
 import Button from "../../items/button/Button";
@@ -20,7 +20,7 @@ const INITIAL_STATE = {
 class SignUpForm extends Component {
   state = { ...INITIAL_STATE };
 
-  onSubmit = event => {
+  signup = event => {
     const { username, email, passwordOne } = this.state;
     console.log(email);
     console.log(passwordOne);
@@ -30,7 +30,7 @@ class SignUpForm extends Component {
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });
-        history.push(HOME);
+        history.push(routes.HOME);
       })
       .catch(error => {
         console.log(error);
@@ -62,7 +62,7 @@ class SignUpForm extends Component {
     return (
       <div className="page signup">
         <section class="container">
-          <form onSubmit={this.onSubmit}>
+          <form>
             <InputField
               value={username}
               field="username"
@@ -96,7 +96,7 @@ class SignUpForm extends Component {
               setState={obj => this.setState(obj)}
             />
             <Button
-              action={e => this.onSubmit(e)}
+              action={e => this.signup(e)}
               label="Sign Up >>"
               disabled={isInvalid}
               attempt={e => {
@@ -118,7 +118,7 @@ class SignUpForm extends Component {
 const SignUpLink = () => (
   <p>
     Don't have an account?
-    <Link to={"/signup"}> Sign Up</Link>
+    <Link to={routes.SIGN_UP}> Sign Up</Link>
   </p>
 );
 

@@ -4,9 +4,11 @@ import InputField from "../../items/input-field/InputField";
 import NavbarIcon from "./NavbarIcon";
 import { NavLink, Link } from "react-router-dom";
 import Pages from "../../pages/Pages";
+import SignOutButton from "../signout/SignOutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faTh } from "@fortawesome/fontawesome-free-solid";
+import AuthUserContext from "../AuthUserContext";
 
 library.add(faTh);
 
@@ -44,28 +46,36 @@ export default class Navbar extends Component {
   }
   render() {
     const { width } = this.state;
+    const { authUser } = this.props;
     if (width > 800) {
       return (
-        <div class="nav-bar">
-          <Link to="/">
-            <h2 class="nav-bar-title">Picapoint</h2>
-          </Link>
-          <InputField
-            placeholder="search"
-            label="filter"
-            field="query"
-            text="search your dashboard..."
-            setState={obj => this.setState(obj)}
-          />
-          <datalist id="sections">
-            {Pages.map((page, i) => (
-              <option key={"option-" + i} value={page.title} />
-            ))}
-          </datalist>
-          <Link to="/">
-            <FontAwesomeIcon icon={faTh} color="black" />
-          </Link>
-        </div>
+        <AuthUserContext.Consumer>
+          {authUser => (
+            <div class="nav-bar">
+              <Link to="/">
+                <h2 class="nav-bar-title">Picapoint</h2>
+              </Link>
+              {authUser ? (
+                <InputField
+                  placeholder="search"
+                  label="filter"
+                  field="query"
+                  text="search your dashboard..."
+                  setState={obj => this.setState(obj)}
+                />
+              ) : null}
+              <datalist id="sections">
+                {Pages.map((page, i) => (
+                  <option key={"option-" + i} value={page.title} />
+                ))}
+              </datalist>
+              <Link to="/">
+                <FontAwesomeIcon icon={faTh} color="black" />
+              </Link>
+              {authUser ? <SignOutButton /> : null}
+            </div>
+          )}
+        </AuthUserContext.Consumer>
       );
     } else {
       return (

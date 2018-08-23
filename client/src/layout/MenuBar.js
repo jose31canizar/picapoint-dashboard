@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Menubar.styl";
 import Pages from "../pages/Pages";
 import { Link } from "react-router-dom";
+import SignOutButton from "../components/signout/SignOutButton";
 
 export default class Menubar extends Component {
   render() {
@@ -24,6 +25,7 @@ export default class Menubar extends Component {
               {link.title}
             </Link>
           ))}
+          <SignOutButton />
         </div>
       </div>
     );

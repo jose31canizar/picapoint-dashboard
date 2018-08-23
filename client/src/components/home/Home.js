@@ -30,7 +30,6 @@ export default class Home extends Component {
     });
   }
   render() {
-    console.log(this.footer);
     return (
       <div className="page home">
         <div class="header">
