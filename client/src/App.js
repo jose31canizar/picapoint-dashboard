@@ -9,6 +9,7 @@ import Account from "./components/account/Account";
 import Layout from "./layout/Layout";
 import Pages from "./pages/Pages";
 import Article from "./pages/template/ArticleTemplate";
+import CustomPage from "./pages/template/CustomTemplate";
 import * as routes from "./constants/routes";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import withAuthentication from "./components/withAuthentication";
@@ -20,12 +21,14 @@ const findTransition = route => {
     case "/home":
       return {
         classNames: findTransitionName(route),
-        timeout: timeout
+        timeout: timeout,
+        enter: "home-enter"
       };
     default:
       return {
         classNames: findTransitionName(route),
-        timeout: timeout
+        timeout: timeout,
+        enter: "transition-enter"
       };
   }
 };
@@ -42,7 +45,8 @@ const findTransitionName = route => {
 class App extends Component {
   state = {
     panelState: "closed",
-    currentRoute: history.location.pathname
+    currentRoute: history.location.pathname,
+    currentTransitionType: findTransition("/home")
   };
   componentDidMount() {
     history.listen(location => {
@@ -86,9 +90,16 @@ class App extends Component {
                         exact
                         path={`/${page.path}`}
                         panelState={this.state.panelState}
-                        render={() => (
-                          <Article path={page.path} className={page.path} />
-                        )}
+                        render={() =>
+                          page.type === "markdown" ? (
+                            <Article path={page.path} className={page.path} />
+                          ) : (
+                            <CustomPage
+                              path={page.path}
+                              className={page.path}
+                            />
+                          )
+                        }
                       />
                     ))}
                     <Route

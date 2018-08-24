@@ -22,9 +22,8 @@ class Login extends Component {
   authenticate = e => {
     const { history } = this.props;
     const { email, password } = this.state;
-    console.log("authenticating...");
-    console.log(email);
-    console.log(password);
+
+    e.preventDefault();
     auth
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
@@ -35,7 +34,6 @@ class Login extends Component {
       .catch(error => {
         this.setState(byPropKey("error", error));
       });
-    e.preventDefault();
   };
   componentDidMount() {
     window.addEventListener("keypress", this.onEnter);

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import "./Signup.styl";
 import * as routes from "../../constants/routes";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import InputField, { byPropKey } from "../../items/input-field/InputField";
 import Button from "../../items/button/Button";
 
@@ -26,23 +26,26 @@ class SignUpForm extends Component {
     console.log(passwordOne);
     const { history } = this.props;
 
+    event.preventDefault();
+
     auth
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        this.setState({ ...INITIAL_STATE });
-        history.push(routes.HOME);
+        //create a user in my own firebase database
+        db.doCreateUser(authUser.user.uid, username, email)
+          .then(() => {
+            this.setState({ ...INITIAL_STATE });
+            history.push(routes.HOME);
+          })
+          .catch(error => {
+            console.log(error);
+            this.setState(byPropKey("error", error));
+          });
       })
       .catch(error => {
         console.log(error);
         this.setState(byPropKey("error", error));
-        /*
-        if (error.code == 400) {
-          this.setState(byPropKey("error", error.message));
-        } else {
-          this.setState(byPropKey("error", error));
-        }*/
       });
-    event.preventDefault();
   };
 
   componentDidMount() {

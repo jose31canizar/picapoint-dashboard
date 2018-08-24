@@ -23,6 +23,8 @@ class PasswordForgetForm extends Component {
   onSubmit = event => {
     const { email } = this.state;
 
+    event.preventDefault();
+
     auth
       .doPasswordReset(email)
       .then(() => {
@@ -34,8 +36,6 @@ class PasswordForgetForm extends Component {
       .catch(error => {
         this.setState(byPropKey("error", error));
       });
-
-    event.preventDefault();
   };
 
   componentDidMount() {
