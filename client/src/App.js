@@ -4,9 +4,11 @@ import { Router, Switch, Route } from "react-router-dom";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Signup from "./components/signup/Signup";
+import PasswordForget from "./components/password-forget/PasswordForget";
+import Account from "./components/account/Account";
 import Layout from "./layout/Layout";
 import Pages from "./pages/Pages";
-import Page from "./pages/template/PageTemplate";
+import Article from "./pages/template/ArticleTemplate";
 import * as routes from "./constants/routes";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import withAuthentication from "./components/withAuthentication";
@@ -15,7 +17,7 @@ const timeout = 1000;
 
 const findTransition = route => {
   switch (route) {
-    case "/":
+    case "/home":
       return {
         classNames: findTransitionName(route),
         timeout: timeout
@@ -85,10 +87,16 @@ class App extends Component {
                         path={`/${page.path}`}
                         panelState={this.state.panelState}
                         render={() => (
-                          <Page path={page.path} className={page.path} />
+                          <Article path={page.path} className={page.path} />
                         )}
                       />
                     ))}
+                    <Route
+                      exact
+                      path={routes.HOME}
+                      panelState={panelState}
+                      render={() => <Home />}
+                    />
                     <Route
                       exact
                       path={routes.LOG_IN}
@@ -100,6 +108,18 @@ class App extends Component {
                       path={routes.SIGN_UP}
                       panelState={panelState}
                       render={() => <Signup />}
+                    />
+                    <Route
+                      exact
+                      path={routes.PASSWORD_FORGET}
+                      panelState={panelState}
+                      render={() => <PasswordForget />}
+                    />
+                    <Route
+                      exact
+                      path={routes.ACCOUNT}
+                      panelState={panelState}
+                      render={() => <Account />}
                     />
                     <Route
                       path="*"

@@ -1,11 +1,15 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import Menubar from "./Menubar";
+import Page from "../pages/template/PageTemplate";
 import "./Layout.styl";
 
-export default class Layout extends Component {
+class Layout extends Component {
   render() {
-    const { panelState, togglePanel } = this.props;
+    const { panelState, togglePanel, location } = this.props;
+
+    console.log(location);
     return (
       <div class="layout">
         <Navbar togglePanel={togglePanel} panelState={panelState} />
@@ -13,7 +17,9 @@ export default class Layout extends Component {
           class="content"
           style={{ marginLeft: panelState === "open" ? -300 : 0 }}
         >
-          {this.props.children}
+          <Page className={location.pathname.substr(1)}>
+            {this.props.children}
+          </Page>
         </div>
         <div class="background-layer" />
         <Menubar panelState={panelState} togglePanel={togglePanel} />
@@ -21,3 +27,5 @@ export default class Layout extends Component {
     );
   }
 }
+
+export default withRouter(Layout);

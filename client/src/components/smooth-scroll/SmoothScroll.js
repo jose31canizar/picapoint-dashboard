@@ -4,7 +4,7 @@ class SmoothScroll extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      negativeOffset: 128,
+      negativeOffset: 64,
       timer: null
     };
     this.handleSectionClick = this.handleSectionClick.bind(this);
@@ -100,8 +100,8 @@ class SmoothScroll extends Component {
         /*
         window.scrollTo(0, yScroll - this.state.negativeOffset);*/
 
-        document.querySelector(".page").scrollTop =
-          yScroll + windowHeight - this.state.negativeOffset;
+        document.querySelector(".article").scrollTop =
+          yScroll + windowHeight + this.state.negativeOffset;
         this.setState({ timer: setTimeout(step.bind(this), 10) });
       }
     }

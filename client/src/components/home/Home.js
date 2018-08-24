@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 import Card from "../card/Card";
 import PageTemplate from "../../pages/template/PageTemplate";
 import Footer from "../../layout/Footer";
+import withAuthorization from "../withAuthorization";
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     var w = window,
       d = document,
@@ -31,7 +32,7 @@ export default class Home extends Component {
   }
   render() {
     return (
-      <div className="page home">
+      <div class="home">
         <div class="header">
           <h2>Hei Bjørn! </h2>
           <p class="explanation">
@@ -55,3 +56,7 @@ export default class Home extends Component {
     );
   }
 }
+
+const authCondition = authUser => !!authUser;
+
+export default withAuthorization(authCondition)(Home);

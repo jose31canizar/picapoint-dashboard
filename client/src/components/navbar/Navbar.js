@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faTh } from "@fortawesome/fontawesome-free-solid";
 import AuthUserContext from "../AuthUserContext";
+import * as routes from "../../constants/routes";
 
 library.add(faTh);
 
@@ -52,27 +53,32 @@ export default class Navbar extends Component {
         <AuthUserContext.Consumer>
           {authUser => (
             <div class="nav-bar">
-              <Link to="/">
+              <Link to={routes.HOME}>
                 <h2 class="nav-bar-title">Picapoint</h2>
               </Link>
               {authUser ? (
-                <InputField
-                  placeholder="search"
-                  label="filter"
-                  field="query"
-                  text="search your dashboard..."
-                  setState={obj => this.setState(obj)}
-                />
+                <div class="navbar-logged-in-items">
+                  <InputField
+                    placeholder="search"
+                    label="filter"
+                    field="query"
+                    text="search your dashboard..."
+                    setState={obj => this.setState(obj)}
+                  />
+                  <datalist id="sections">
+                    {Pages.map((page, i) => (
+                      <option key={"option-" + i} value={page.title} />
+                    ))}
+                  </datalist>
+                  <NavLink to={routes.HOME} class="navbar-logged-in-item">
+                    <FontAwesomeIcon icon={faTh} color="black" />
+                  </NavLink>
+                  <SignOutButton className="navbar-logged-in-item" />
+                  <NavLink to="/account" class="navbar-logged-in-item">
+                    <label>Account</label>
+                  </NavLink>
+                </div>
               ) : null}
-              <datalist id="sections">
-                {Pages.map((page, i) => (
-                  <option key={"option-" + i} value={page.title} />
-                ))}
-              </datalist>
-              <Link to="/">
-                <FontAwesomeIcon icon={faTh} color="black" />
-              </Link>
-              {authUser ? <SignOutButton /> : null}
             </div>
           )}
         </AuthUserContext.Consumer>

@@ -42,7 +42,22 @@ class SignUpForm extends Component {
           this.setState(byPropKey("error", error));
         }*/
       });
+    event.preventDefault();
   };
+
+  componentDidMount() {
+    window.addEventListener("keypress", this.onEnter);
+  }
+
+  onEnter = e => {
+    if (e.keyCode === 13) {
+      this.signup(e);
+    }
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("keypress", this.onEnter);
+  }
 
   render() {
     const {
@@ -60,57 +75,55 @@ class SignUpForm extends Component {
       username === "";
 
     return (
-      <div className="page signup">
-        <section class="container">
-          <form>
-            <InputField
-              value={username}
-              field="username"
-              label="Name"
-              type="text"
-              placeholder="Full Name"
-              setState={obj => this.setState(obj)}
-            />
-            <InputField
-              value={email}
-              field="email"
-              label="Email"
-              type="text"
-              placeholder="Email Address"
-              setState={obj => this.setState(obj)}
-            />
-            <InputField
-              value={passwordOne}
-              type="password"
-              field="passwordOne"
-              label="Password"
-              placeholder="Password"
-              setState={obj => this.setState(obj)}
-            />
-            <InputField
-              value={passwordTwo}
-              type="password"
-              field="passwordTwo"
-              label="Confirmation"
-              placeholder="Confirm Password"
-              setState={obj => this.setState(obj)}
-            />
-            <Button
-              action={e => this.signup(e)}
-              label="Sign Up >>"
-              disabled={isInvalid}
-              attempt={e => {
-                this.setState({ attempted: true });
-                e.preventDefault();
-              }}
-            />
+      <section class="auth container">
+        <form>
+          <InputField
+            value={username}
+            field="username"
+            label="Name"
+            type="text"
+            placeholder="Full Name"
+            setState={obj => this.setState(obj)}
+          />
+          <InputField
+            value={email}
+            field="email"
+            label="Email"
+            type="text"
+            placeholder="Email Address"
+            setState={obj => this.setState(obj)}
+          />
+          <InputField
+            value={passwordOne}
+            type="password"
+            field="passwordOne"
+            label="Password"
+            placeholder="Password"
+            setState={obj => this.setState(obj)}
+          />
+          <InputField
+            value={passwordTwo}
+            type="password"
+            field="passwordTwo"
+            label="Confirmation"
+            placeholder="Confirm Password"
+            setState={obj => this.setState(obj)}
+          />
+          <Button
+            action={this.signup}
+            label="Sign Up >>"
+            disabled={isInvalid}
+            attempt={e => {
+              this.setState({ attempted: true });
+              e.preventDefault();
+            }}
+          />
 
-            {error && <p>{error.message}</p>}
-            {isInvalid &&
-              attempted && <p>Invalid input 😔 (do your passwords match?)</p>}
-          </form>
-        </section>
-      </div>
+          {error && <p>{error.message}</p>}
+          {isInvalid &&
+            attempted && <p>Invalid input 😔 (do your passwords match?)</p>}
+        </form>
+      </section>
     );
   }
 }
