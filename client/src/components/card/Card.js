@@ -2,27 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Card.styl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faCrown,
-  faImage,
-  faBullhorn,
-  faThLarge,
-  faStickyNote,
-  faPaperclip,
-  faUsers,
-  faCog
-} from "@fortawesome/fontawesome-free-solid";
-library.add(
-  faCrown,
-  faImage,
-  faBullhorn,
-  faThLarge,
-  faStickyNote,
-  faPaperclip,
-  faUsers,
-  faCog
-);
 
 const Card = props => (
   <span class="card">

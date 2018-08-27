@@ -79,53 +79,51 @@ class SignUpForm extends Component {
 
     return (
       <section class="auth container">
-        <form>
-          <InputField
-            value={username}
-            field="username"
-            label="Name"
-            type="text"
-            placeholder="Full Name"
-            setState={obj => this.setState(obj)}
-          />
-          <InputField
-            value={email}
-            field="email"
-            label="Email"
-            type="text"
-            placeholder="Email Address"
-            setState={obj => this.setState(obj)}
-          />
-          <InputField
-            value={passwordOne}
-            type="password"
-            field="passwordOne"
-            label="Password"
-            placeholder="Password"
-            setState={obj => this.setState(obj)}
-          />
-          <InputField
-            value={passwordTwo}
-            type="password"
-            field="passwordTwo"
-            label="Confirmation"
-            placeholder="Confirm Password"
-            setState={obj => this.setState(obj)}
-          />
-          <Button
-            action={this.signup}
-            label="Sign Up >>"
-            disabled={isInvalid}
-            attempt={e => {
-              this.setState({ attempted: true });
-              e.preventDefault();
-            }}
-          />
+        <InputField
+          value={username}
+          field="username"
+          label="Name"
+          type="text"
+          placeholder="Full Name"
+          setState={obj => this.setState(obj)}
+        />
+        <InputField
+          value={email}
+          field="email"
+          label="Email"
+          type="text"
+          placeholder="Email Address"
+          setState={obj => this.setState(obj)}
+        />
+        <InputField
+          value={passwordOne}
+          type="password"
+          field="passwordOne"
+          label="Password"
+          placeholder="Password"
+          setState={obj => this.setState(obj)}
+        />
+        <InputField
+          value={passwordTwo}
+          type="password"
+          field="passwordTwo"
+          label="Confirmation"
+          placeholder="Confirm Password"
+          setState={obj => this.setState(obj)}
+        />
+        <Button
+          action={this.signup}
+          label="Sign Up >>"
+          disabled={isInvalid}
+          attempt={e => {
+            this.setState({ attempted: true });
+            e.preventDefault();
+          }}
+        />
 
-          {error && <p>{error.message}</p>}
-          {isInvalid &&
-            attempted && <p>Invalid input 😔 (do your passwords match?)</p>}
-        </form>
+        {error && <p>{error.message}</p>}
+        {isInvalid &&
+          attempted && <p>Invalid input 😔 (do your passwords match?)</p>}
       </section>
     );
   }

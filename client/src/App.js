@@ -21,14 +21,12 @@ const findTransition = route => {
     case "/home":
       return {
         classNames: findTransitionName(route),
-        timeout: timeout,
-        enter: "home-enter"
+        timeout: timeout
       };
     default:
       return {
         classNames: findTransitionName(route),
-        timeout: timeout,
-        enter: "transition-enter"
+        timeout: timeout
       };
   }
 };

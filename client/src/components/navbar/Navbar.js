@@ -6,12 +6,8 @@ import { NavLink, Link } from "react-router-dom";
 import Pages from "../../pages/Pages";
 import SignOutButton from "../signout/SignOutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTh } from "@fortawesome/fontawesome-free-solid";
 import AuthUserContext from "../AuthUserContext";
 import * as routes from "../../constants/routes";
-
-library.add(faTh);
 
 export default class Navbar extends Component {
   constructor(props) {
@@ -71,7 +67,7 @@ export default class Navbar extends Component {
                     ))}
                   </datalist>
                   <NavLink to={routes.HOME} class="navbar-logged-in-item">
-                    <FontAwesomeIcon icon={faTh} color="black" />
+                    <FontAwesomeIcon icon="th" color="black" />
                   </NavLink>
                   <SignOutButton className="navbar-logged-in-item" />
                   <NavLink to="/account" class="navbar-logged-in-item">

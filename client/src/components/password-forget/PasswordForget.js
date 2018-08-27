@@ -59,24 +59,22 @@ class PasswordForgetForm extends Component {
     return (
       <section class="auth container">
         <h3>Reset your password below.</h3>
-        <form onSubmit={this.onSubmit}>
-          <InputField
-            value={this.state.email}
-            field="email"
-            label="Email"
-            type="text"
-            setState={obj => this.setState(obj)}
-            placeholder="Email Address"
-          />
-          <Button
-            disabled={isInvalid}
-            action={this.onSubmit}
-            label="Reset My Password"
-          />
+        <InputField
+          value={this.state.email}
+          field="email"
+          label="Email"
+          type="text"
+          setState={obj => this.setState(obj)}
+          placeholder="Email Address"
+        />
+        <Button
+          disabled={isInvalid}
+          action={this.onSubmit}
+          label="Reset My Password"
+        />
 
-          {error && <p>{error.message}</p>}
-          {message && <p>{message}</p>}
-        </form>
+        {error && <p>{error.message}</p>}
+        {message && <p>{message}</p>}
       </section>
     );
   }

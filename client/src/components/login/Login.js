@@ -72,7 +72,6 @@ class Login extends Component {
         />
         <Button action={e => authenticate(e)} label="Logg Inn >>" />
         {error && <p>{error.message}</p>}
-        <Link to="forgot-password">Glemt passord?</Link>
         <PasswordForgetLink />
         <SignUpLink />
       </section>

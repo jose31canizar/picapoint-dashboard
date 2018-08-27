@@ -3,10 +3,7 @@ import withAuthorization from "../../components/withAuthorization";
 import Footer from "../../layout/Footer";
 import { db } from "../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faSpinner } from "@fortawesome/fontawesome-free-solid";
 import "./CustomTemplate.styl";
-library.add(faSpinner);
 class CustomPage extends Component {
   state = {
     users: null
@@ -28,7 +25,7 @@ class CustomPage extends Component {
             <UserList users={users} />
           ) : (
             <div>
-              <FontAwesomeIcon icon={faSpinner} />
+              <FontAwesomeIcon icon="fa-spinner" />
               <p>loading users...</p>
             </div>
           )}
@@ -40,10 +37,20 @@ class CustomPage extends Component {
 }
 
 const UserList = ({ users }) => (
-  <div>
+  <div class="user-list">
     <h3>List of Users</h3>
     {Object.keys(users).map(key => (
-      <p key={key}>{users[key].username}</p>
+      <div class="user">
+        <div class="profile-picture" />
+        <div class="user-info">
+          <p class="username" key={key}>
+            {users[key].username}
+          </p>
+          <p class="email" key={key}>
+            {users[key].email}
+          </p>
+        </div>
+      </div>
     ))}
   </div>
 );

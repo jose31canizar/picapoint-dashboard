@@ -45,32 +45,30 @@ class PasswordChangeForm extends Component {
     return (
       <section class="auth container">
         <h3>Change your password below.</h3>
-        <form onSubmit={this.onSubmit}>
-          <InputField
-            value={passwordOne}
-            label="New Password"
-            field="passwordOne"
-            setState={obj => this.setState(obj)}
-            type="password"
-            placeholder="New Password"
-          />
-          <InputField
-            value={passwordTwo}
-            label="Confirm"
-            field="passwordTwo"
-            setState={obj => this.setState(obj)}
-            type="password"
-            placeholder="Confirm New Password"
-          />
-          <Button
-            disabled={isInvalid}
-            action={e => onSubmit(e)}
-            label="Reset my password"
-          />
+        <InputField
+          value={passwordOne}
+          label="New Password"
+          field="passwordOne"
+          setState={obj => this.setState(obj)}
+          type="password"
+          placeholder="New Password"
+        />
+        <InputField
+          value={passwordTwo}
+          label="Confirm"
+          field="passwordTwo"
+          setState={obj => this.setState(obj)}
+          type="password"
+          placeholder="Confirm New Password"
+        />
+        <Button
+          disabled={isInvalid}
+          action={e => onSubmit(e)}
+          label="Reset my password"
+        />
 
-          {error && <p>{error.message}</p>}
-          {message && <p>{message}</p>}
-        </form>
+        {error && <p>{error.message}</p>}
+        {message && <p>{message}</p>}
       </section>
     );
   }

@@ -8,8 +8,6 @@ import "./Layout.styl";
 class Layout extends Component {
   render() {
     const { panelState, togglePanel, location } = this.props;
-
-    console.log(location);
     return (
       <div class="layout">
         <Navbar togglePanel={togglePanel} panelState={panelState} />
