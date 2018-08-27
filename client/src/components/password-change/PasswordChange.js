@@ -44,7 +44,7 @@ class PasswordChangeForm extends Component {
 
     return (
       <section class="auth container">
-        <h3>Change your password below.</h3>
+        <h3>Change your password below</h3>
         <InputField
           value={passwordOne}
           label="New Password"

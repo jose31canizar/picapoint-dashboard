@@ -43,8 +43,8 @@ const UserList = ({ users }) => (
       <div class="user">
         <div class="profile-picture" />
         <div class="user-info">
-          <p class="username" key={key}>
-            {users[key].username}
+          <p class="name" key={key}>
+            {users[key].name}
           </p>
           <p class="email" key={key}>
             {users[key].email}

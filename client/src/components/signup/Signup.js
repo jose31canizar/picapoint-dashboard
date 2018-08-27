@@ -9,7 +9,7 @@ import Button from "../../items/button/Button";
 const SignUpPage = ({ history }) => <SignUpForm history={history} />;
 
 const INITIAL_STATE = {
-  username: "",
+  name: "",
   email: "",
   passwordOne: "",
   passwordTwo: "",
@@ -21,7 +21,7 @@ class SignUpForm extends Component {
   state = { ...INITIAL_STATE };
 
   signup = event => {
-    const { username, email, passwordOne } = this.state;
+    const { name, email, passwordOne } = this.state;
     console.log(email);
     console.log(passwordOne);
     const { history } = this.props;
@@ -32,7 +32,7 @@ class SignUpForm extends Component {
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         //create a user in my own firebase database
-        db.doCreateUser(authUser.user.uid, username, email)
+        db.doCreateUser(authUser.user.uid, name, email)
           .then(() => {
             this.setState({ ...INITIAL_STATE });
             history.push(routes.HOME);
@@ -64,7 +64,7 @@ class SignUpForm extends Component {
 
   render() {
     const {
-      username,
+      name,
       email,
       passwordOne,
       passwordTwo,
@@ -75,13 +75,13 @@ class SignUpForm extends Component {
       passwordOne !== passwordTwo ||
       passwordOne === "" ||
       email === "" ||
-      username === "";
+      name === "";
 
     return (
       <section class="auth container">
         <InputField
-          value={username}
-          field="username"
+          value={name}
+          field="name"
           label="Name"
           type="text"
           placeholder="Full Name"

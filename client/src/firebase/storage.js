@@ -1,5 +1,5 @@
 import { storage } from "./firebase";
-import { updateUserField } from "./db";
+import { doUpdateUserField } from "./db";
 
 export const uploadFile = (name, file, metadata, id) =>
   storage
@@ -8,10 +8,8 @@ export const uploadFile = (name, file, metadata, id) =>
     .put(file, metadata)
     .then(snapshot => snapshot.ref.getDownloadURL())
     .then(url => {
-      console.log(url);
-      updateUserField("profile_picture", url, id).then(img => {
+      doUpdateUserField("profile_picture", url, id).then(() => {
         console.log("saved profile picture!");
-        console.log(img);
       });
     })
     .catch(error => {

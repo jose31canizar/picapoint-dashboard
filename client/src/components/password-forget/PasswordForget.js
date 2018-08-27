@@ -58,7 +58,7 @@ class PasswordForgetForm extends Component {
 
     return (
       <section class="auth container">
-        <h3>Reset your password below.</h3>
+        <h3>Reset your password below</h3>
         <InputField
           value={this.state.email}
           field="email"

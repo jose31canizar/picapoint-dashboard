@@ -1,13 +1,18 @@
 .account section.auth.container
   position relative
-  margin 5rem 0
   display inline
+
+.page .account
+  display grid
+  grid-template-columns repeat(2, 1fr)
+  grid-template-rows repeat(2, 1fr)
 
 .account
   .account-profile
     display flex
     justify-content center
     align-items center
+    padding 5rem
 
   .profile-picture-container
     width 5rem
@@ -43,3 +48,9 @@
 
   .profile-info
     flex 1
+
+    h3
+      margin 0
+
+    h5
+      margin-top 1rem

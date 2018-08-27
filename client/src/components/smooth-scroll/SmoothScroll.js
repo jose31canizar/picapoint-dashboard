@@ -101,7 +101,7 @@ class SmoothScroll extends Component {
         window.scrollTo(0, yScroll - this.state.negativeOffset);*/
 
         document.querySelector(".article").scrollTop =
-          yScroll + windowHeight + this.state.negativeOffset;
+          yScroll + windowHeight - this.state.negativeOffset;
         this.setState({ timer: setTimeout(step.bind(this), 10) });
       }
     }

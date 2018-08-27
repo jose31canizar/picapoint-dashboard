@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import AuthUserContext from "../AuthUserContext";
 import { PasswordForgetForm } from "../password-forget/PasswordForget";
 import PasswordChangeForm from "../password-change/PasswordChange";
+import UpdateAccount from "../update-account/UpdateAccount";
 import withAuthorization from "../withAuthorization";
 import { storage, db } from "../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +11,8 @@ import "./Account.styl";
 class AccountProfile extends Component {
   state = {
     imageData: null,
-    imageExists: false
+    imageExists: false,
+    name: null
   };
   uploadFile = (e, id) => {
     const file = this.fileUploader.files[0];
@@ -23,10 +25,10 @@ class AccountProfile extends Component {
     storage.uploadFile(name, file, metadata, id);
   };
   componentDidMount() {
-    const { uid } = this.props.authUser;
-    db.loadAssetIfExists(uid, "profile_picture", imageData =>
+    db.loadAssetIfExists("profile_picture", imageData =>
       this.setState({ imageData, imageExists: true })
     );
+    db.loadAssetIfExists("name", name => this.setState({ name }));
   }
   previewImage = (file, type) => {
     let reader = new FileReader();
@@ -44,30 +46,38 @@ class AccountProfile extends Component {
     reader.readAsDataURL(file);
   };
   render() {
-    const { imageData, imageExists } = this.state;
+    const { name, imageData, imageExists } = this.state;
     const { authUser } = this.props;
+
     return (
       <div class="account-profile">
-        <div class="profile-picture-container">
-          <input
-            type="file"
-            name="file"
-            id="file"
-            accept=".jpg, .jpeg, .png"
-            ref={ref => (this.fileUploader = ref)}
-            onChange={e => this.uploadFile(e, authUser.uid)}
-          />
-          <label for="file" class="file-upload-button" />
-          {imageExists ? (
-            <img src={imageData} alt="could not load profile image" />
-          ) : (
-            <FontAwesomeIcon icon="camera" />
-          )}
-        </div>
-        <div class="profile-info">
-          <h3>Here's your account {authUser.username}</h3>
-          <h3>{authUser.email}</h3>
-        </div>
+        {name ? (
+          <div style={{ display: "flex" }}>
+            <div class="profile-picture-container">
+              <input
+                type="file"
+                name="file"
+                id="file"
+                accept=".jpg, .jpeg, .png"
+                ref={ref => (this.fileUploader = ref)}
+                onChange={e => this.uploadFile(e, authUser.uid)}
+              />
+              <label for="file" class="file-upload-button" />
+              {imageExists ? (
+                <img src={imageData} alt="could not load profile image" />
+              ) : (
+                <FontAwesomeIcon icon="camera" />
+              )}
+            </div>
+            <div class="profile-info">
+              <h3>Here's your account,</h3>
+              <h3>{name}</h3>
+              <h5>{authUser.email}</h5>
+            </div>
+          </div>
+        ) : (
+          <FontAwesomeIcon icon="spinner" spin />
+        )}
       </div>
     );
   }
@@ -80,6 +90,7 @@ class AccountPage extends Component {
         {authUser => (
           <div class="account">
             <AccountProfile authUser={authUser} />
+            <UpdateAccount />
             <PasswordForgetForm />
             <PasswordChangeForm />
           </div>

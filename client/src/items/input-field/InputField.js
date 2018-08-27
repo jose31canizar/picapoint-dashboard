@@ -1,6 +1,14 @@
 import React from "react";
 import "./InputField.styl";
-const InputField = ({ value, field, type, label, placeholder, setState }) => (
+const InputField = ({
+  value,
+  field,
+  type,
+  label,
+  placeholder,
+  setState,
+  rightIcon
+}) => (
   <div class="input-field-container">
     <span>{label}</span>
     <input
@@ -10,6 +18,7 @@ const InputField = ({ value, field, type, label, placeholder, setState }) => (
       type={type}
       placeholder={placeholder}
     />
+    {rightIcon}
   </div>
 );
 

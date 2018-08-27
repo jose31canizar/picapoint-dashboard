@@ -15,7 +15,9 @@ import {
   faCog,
   faCamera,
   faTh,
-  faSpinner
+  faSpinner,
+  faCheck,
+  faTimes
 } from "@fortawesome/fontawesome-free-solid";
 library.add(
   faCrown,
@@ -28,7 +30,9 @@ library.add(
   faCog,
   faCamera,
   faTh,
-  faSpinner
+  faSpinner,
+  faCheck,
+  faTimes
 );
 
 ReactDOM.render(<App />, document.getElementById("root"));
