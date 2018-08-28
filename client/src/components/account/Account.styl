@@ -17,6 +17,24 @@
     justify-content center
     align-items center
     padding 5rem
+    flex-direction column
+
+  input[type=file]
+    display none
+
+  .media-uploader-container
+    padding 1rem
+    margin 1rem
+    cursor pointer
+
+    label
+      width 5rem
+      padding 0.9rem 1.5rem
+      background #6969984f
+
+  .media-uploader-container:hover label
+    background rgba(3, 3, 35, 0.55)
+    color white
 
   .profile-picture-container
     width 5rem
@@ -26,9 +44,7 @@
     margin-right 2rem
     position relative
     overflow hidden
-
-    input[type=file]
-      display none
+    cursor pointer
 
     label
       width 5rem
@@ -38,7 +54,6 @@
       position absolute
       border-radius 5rem
       top 0
-      cursor pointer
 
     svg
       position absolute
@@ -49,6 +64,9 @@
 
       path
         fill white
+
+  .profile-picture-container:hover label
+    background rgba(255, 255, 255, 0.31)
 
   .profile-info
     flex 1

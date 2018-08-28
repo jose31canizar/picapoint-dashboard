@@ -11,6 +11,12 @@ const eslintFormatter = require("react-dev-utils/eslintFormatter");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
+const myMarked = require("marked");
+const renderer = new myMarked.Renderer();
+
+renderer.image = function(href, level) {
+  return `<img src="${href}" style="padding: 50px 0;"/>`;
+};
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -145,7 +151,8 @@ module.exports = {
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
-              cacheDirectory: true
+              cacheDirectory: true,
+              babelrc: true
             }
           },
           {
@@ -157,7 +164,8 @@ module.exports = {
               {
                 loader: "markdown-loader",
                 options: {
-                  gfm: false
+                  gfm: false,
+                  renderer: renderer
                 }
               }
             ]

@@ -8,21 +8,40 @@ import { storage, db } from "../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Account.styl";
 
+const MediaUploader = ({ uploadFile, authUser, mediaUploader }) => (
+  <div class="media-uploader-container">
+    <input
+      type="file"
+      name="media-file"
+      id="media-file"
+      ref={ref => (mediaUploader = ref)}
+      onChange={e =>
+        uploadFile(e, mediaUploader, authUser.uid, "media_image", false)
+      }
+    />
+    <label for="media-file" class="file-upload-button">
+      upload media
+    </label>
+  </div>
+);
+
 class AccountProfile extends Component {
   state = {
     imageData: null,
     imageExists: false,
     name: null
   };
-  uploadFile = (e, id) => {
-    const file = this.fileUploader.files[0];
+  uploadFile = (e, uploader, id, field, preview) => {
+    const file = uploader.files[0];
     const type = file.type;
     const name = +new Date() + "-" + file.name;
     const metadata = {
       contentType: type
     };
-    this.previewImage(file, type);
-    storage.uploadFile(name, file, metadata, id);
+    if (preview) {
+      this.previewImage(file, type);
+    }
+    storage.uploadFile(name, file, metadata, id, field);
   };
   componentDidMount() {
     db.loadAssetIfExists("profile_picture", imageData =>
@@ -60,7 +79,15 @@ class AccountProfile extends Component {
                 id="file"
                 accept=".jpg, .jpeg, .png"
                 ref={ref => (this.fileUploader = ref)}
-                onChange={e => this.uploadFile(e, authUser.uid)}
+                onChange={e =>
+                  this.uploadFile(
+                    e,
+                    this.fileUploader,
+                    authUser.uid,
+                    "profile_picture",
+                    true
+                  )
+                }
               />
               <label for="file" class="file-upload-button" />
               {imageExists ? (
@@ -78,6 +105,11 @@ class AccountProfile extends Component {
         ) : (
           <FontAwesomeIcon icon="spinner" spin />
         )}
+        <MediaUploader
+          uploadFile={this.uploadFile}
+          authUser={authUser}
+          mediaUploader={this.mediaUploader}
+        />
       </div>
     );
   }

@@ -1,6 +1,8 @@
 ##Profilguide
 Her finner du retningslinjer for hvordan vår logo og profil skal benyttes. Du kan også laste ned logoer og elementer.
 
+image-one
+
 
 ###Logo
 Kommer i to alternativer; en positiv utgave (oransje bunn) og en negativ utgave (hvit bunn). Negativ logo brukes kun på oransje bunn for å ivareta logoens identitet.

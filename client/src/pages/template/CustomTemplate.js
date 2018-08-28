@@ -40,7 +40,7 @@ const UserList = ({ users }) => (
   <div class="user-list">
     <h3>List of Users</h3>
     {Object.keys(users).map(key => (
-      <div class="user">
+      <div class="user" key={"user-" + key}>
         <div class="profile-picture">
           <img src={users[key].profile_picture} />
         </div>

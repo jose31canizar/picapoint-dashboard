@@ -1,4 +1,0 @@
-{
-  "plugins": ["react-html-attrs", "dynamic-import-node"],
-  "presets": ["react", "env", "stage-2"]
-}
