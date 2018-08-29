@@ -21,7 +21,12 @@ export default class Menubar extends Component {
         <div class="block-links">
           <h3>MENU</h3>
           {Pages.map((link, i) => (
-            <Link to={link.path} key={"page-link" + i} onClick={togglePanel}>
+            <Link
+              to={link.path}
+              tabIndex="-1"
+              key={"page-link" + i}
+              onClick={togglePanel}
+            >
               {link.title}
             </Link>
           ))}

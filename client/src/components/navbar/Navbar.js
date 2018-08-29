@@ -49,7 +49,7 @@ export default class Navbar extends Component {
         <AuthUserContext.Consumer>
           {authUser => (
             <div class="nav-bar">
-              <Link to={routes.HOME}>
+              <Link to={routes.HOME} tabIndex="-1">
                 <h2 class="nav-bar-title">Picapoint</h2>
               </Link>
               {authUser ? (
@@ -66,11 +66,19 @@ export default class Navbar extends Component {
                       <option key={"option-" + i} value={page.title} />
                     ))}
                   </datalist>
-                  <NavLink to={routes.HOME} class="navbar-logged-in-item">
+                  <NavLink
+                    to={routes.HOME}
+                    tabIndex="-1"
+                    class="navbar-logged-in-item"
+                  >
                     <FontAwesomeIcon icon="th" color="black" />
                   </NavLink>
                   <SignOutButton className="navbar-logged-in-item" />
-                  <NavLink to="/account" class="navbar-logged-in-item">
+                  <NavLink
+                    to="/account"
+                    tabIndex="-1"
+                    class="navbar-logged-in-item"
+                  >
                     <label>Account</label>
                   </NavLink>
                 </div>
@@ -82,7 +90,7 @@ export default class Navbar extends Component {
     } else {
       return (
         <div class="nav-bar-mobile">
-          <Link to="/">
+          <Link to="/" tabIndex="-1">
             <h2
               class={
                 this.props.panelState === "closed" ? "" : "hide-nav-bar-title"

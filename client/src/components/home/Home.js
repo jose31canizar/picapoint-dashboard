@@ -7,6 +7,7 @@ import Card from "../card/Card";
 import PageTemplate from "../../pages/template/PageTemplate";
 import Footer from "../../layout/Footer";
 import withAuthorization from "../withAuthorization";
+import { db } from "../../firebase";
 
 class Home extends Component {
   constructor(props) {
@@ -17,10 +18,12 @@ class Home extends Component {
     const width = w.innerWidth || e.clientWidth || g.clientWidth;
     super(props);
     this.state = {
-      width: width
+      width: width,
+      name: null
     };
   }
   componentDidMount() {
+    db.loadAssetIfExists("name", name => this.setState({ name }));
     window.addEventListener("resize", () => {
       var w = window,
         d = document,
@@ -31,10 +34,12 @@ class Home extends Component {
     });
   }
   render() {
+    const { name } = this.state;
     return (
       <div class="home">
         <div class="header">
-          <h2>Hei Bjørn! </h2>
+          {name && <h2 class="home-header-title">Hei {name}</h2>}
+
           <p class="explanation">
             Her finner du guider og nedlastinger til å hjelpe deg i
             markedsføring og kommunikasjon for Nr1 Fitness.

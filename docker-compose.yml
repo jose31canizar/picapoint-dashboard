@@ -1,0 +1,21 @@
+version: '3'
+services:
+  ####################
+  # NODE
+  ####################
+  node:
+    image         : node:carbon
+    container_name: Node
+    build         : ./node
+  #####################
+  # NGINX
+  #####################
+  nginx:
+    image         : nginx:stable
+    container_name: Nginx
+    build         : ./nginx
+    links         :
+      - node
+    ports:
+      - "80:80"
+      - "443:443"

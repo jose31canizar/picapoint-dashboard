@@ -10,6 +10,7 @@ import Layout from "./layout/Layout";
 import Pages from "./pages/Pages";
 import Article from "./pages/template/ArticleTemplate";
 import CustomPage from "./pages/template/CustomTemplate";
+import EditablePage from "./pages/template/EditableTemplate";
 import * as routes from "./constants/routes";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import withAuthentication from "./components/withAuthentication";
@@ -91,6 +92,11 @@ class App extends Component {
                         render={() =>
                           page.type === "markdown" ? (
                             <Article path={page.path} className={page.path} />
+                          ) : page.type === "editable" ? (
+                            <EditablePage
+                              path={page.path}
+                              className={page.path}
+                            />
                           ) : (
                             <CustomPage
                               path={page.path}

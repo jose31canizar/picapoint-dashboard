@@ -21,7 +21,7 @@
     "image": "color-burst",
     "color": "#007CAD",
     "icon": "bullhorn",
-    "type": "list"
+    "type": "editable"
   },
   {
     "path": "templates",

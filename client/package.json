@@ -2,6 +2,7 @@
   "name": "picapoint-dashboard",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
@@ -27,6 +28,10 @@
     "dompurify": "^1.0.7",
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
+    "draft-js": "^0.10.5",
+    "draft-js-code": "^0.3.0",
+    "draft-js-color-picker": "^1.0.2",
+    "draftjs-md-converter": "^1.1.1",
     "eslint": "4.10.0",
     "eslint-config-react-app": "^2.1.0",
     "eslint-loader": "1.9.0",

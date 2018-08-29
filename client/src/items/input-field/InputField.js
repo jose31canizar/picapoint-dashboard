@@ -12,6 +12,7 @@ const InputField = ({
   <div class="input-field-container">
     <span>{label}</span>
     <input
+      tabIndex="-1"
       class="input-field"
       value={value}
       onChange={event => setState(byPropKey(field, event.target.value))}
