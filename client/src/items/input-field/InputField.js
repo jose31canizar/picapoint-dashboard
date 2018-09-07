@@ -7,18 +7,21 @@ const InputField = ({
   label,
   placeholder,
   setState,
-  rightIcon
+  rightIcon,
+  datalist,
+  datalistName
 }) => (
   <div class="input-field-container">
-    <span>{label}</span>
+    <label>{label}</label>
     <input
-      tabIndex="-1"
       class="input-field"
       value={value}
       onChange={event => setState(byPropKey(field, event.target.value))}
       type={type}
       placeholder={placeholder}
+      list={datalistName}
     />
+    {datalist}
     {rightIcon}
   </div>
 );

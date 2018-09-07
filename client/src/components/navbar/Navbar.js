@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import "./Navbar.styl";
 import InputField from "../../items/input-field/InputField";
 import NavbarIcon from "./NavbarIcon";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, withRouter } from "react-router-dom";
 import Pages from "../../pages/Pages";
 import SignOutButton from "../signout/SignOutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AuthUserContext from "../AuthUserContext";
 import * as routes from "../../constants/routes";
 
-export default class Navbar extends Component {
+class Navbar extends Component {
   constructor(props) {
     var w = window,
       d = document,
@@ -33,17 +33,26 @@ export default class Navbar extends Component {
 
     this.setState({ width });
   }
+  onEnter = e => {
+    const { history } = this.props;
+    const { query } = this.state;
+    if (e.keyCode === 13) {
+      history.push(query);
+    }
+  };
   componentDidMount() {
     this.handleResize();
 
     window.addEventListener("resize", this.handleResize);
+    window.addEventListener("keypress", this.onEnter);
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener("keypress", this.onEnter);
   }
   render() {
     const { width } = this.state;
-    const { authUser } = this.props;
+    const { authUser, history } = this.props;
     if (width > 800) {
       return (
         <AuthUserContext.Consumer>
@@ -60,12 +69,16 @@ export default class Navbar extends Component {
                     field="query"
                     text="search your dashboard..."
                     setState={obj => this.setState(obj)}
+                    datalistName="sections"
+                    datalist={
+                      <datalist id="sections">
+                        {Pages.map((page, i) => (
+                          <option key={"option-" + i} value={page.path} />
+                        ))}
+                      </datalist>
+                    }
                   />
-                  <datalist id="sections">
-                    {Pages.map((page, i) => (
-                      <option key={"option-" + i} value={page.title} />
-                    ))}
-                  </datalist>
+
                   <NavLink
                     to={routes.HOME}
                     tabIndex="-1"
@@ -108,3 +121,5 @@ export default class Navbar extends Component {
     }
   }
 }
+
+export default withRouter(Navbar);
