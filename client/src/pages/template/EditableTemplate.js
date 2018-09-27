@@ -6,7 +6,9 @@ import {
   RichUtils,
   Modifier,
   getDefaultKeyBinding,
-  KeyBindingUtil
+  KeyBindingUtil,
+  convertToRaw,
+  convertFromRaw
 } from "draft-js";
 import "draft-js/dist/Draft.css";
 import CodeUtils from "draft-js-code";
@@ -194,9 +196,22 @@ class EditableTemplate extends Component {
   getEditorState = () => this.state.editorState;
   onChange = editorState => this.setState({ editorState });
   picker = colorPickerPlugin(this.onChange, this.getEditorState);
-  state = {
-    editorState: EditorState.createEmpty()
-  };
+  constructor(props) {
+    super(props);
+    const content = window.localStorage.getItem("content");
+    if (content) {
+      this.state = {
+        editorState: EditorState.createWithContent(
+          convertFromRaw(JSON.parse(content))
+        )
+      };
+    } else {
+      this.state = {
+        editorState: EditorState.createEmpty()
+      };
+    }
+  }
+
   componentDidMount() {
     this.focus();
   }
@@ -242,6 +257,11 @@ class EditableTemplate extends Component {
     if (command === "editor-save") {
       console.log("save file");
       console.log(editorState.getCurrentContent().getPlainText());
+
+      window.localStorage.setItem(
+        "content",
+        JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+      );
       return "handled";
     }
 
@@ -297,6 +317,7 @@ class EditableTemplate extends Component {
     if (CodeUtils.hasSelectionInBlock(editorState)) return "not-handled";
 
     this.onChange(CodeUtils.handleReturn(e, editorState));
+
     return "handled";
   };
 
