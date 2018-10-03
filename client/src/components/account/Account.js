@@ -6,9 +6,15 @@ import UpdateAccount from "../update-account/UpdateAccount";
 import withAuthorization from "../withAuthorization";
 import { storage, db } from "../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import InputField from "../../items/input-field/InputField";
 import "./Account.styl";
 
-const MediaUploader = ({ uploadFile, authUser, mediaUploader }) => (
+const MediaUploader = ({
+  uploadFile,
+  authUser,
+  mediaUploader,
+  mediaItemName
+}) => (
   <div class="media-uploader-container">
     <input
       type="file"
@@ -16,7 +22,7 @@ const MediaUploader = ({ uploadFile, authUser, mediaUploader }) => (
       id="media-file"
       ref={ref => (mediaUploader = ref)}
       onChange={e =>
-        uploadFile(e, mediaUploader, authUser.uid, "media_image", false)
+        uploadFile(e, mediaUploader, authUser.uid, mediaItemName, false)
       }
     />
     <label for="media-file" class="file-upload-button">
@@ -29,7 +35,8 @@ class AccountProfile extends Component {
   state = {
     imageData: null,
     imageExists: false,
-    name: null
+    name: null,
+    mediaItemName: null
   };
   uploadFile = (e, uploader, id, field, preview) => {
     const file = uploader.files[0];
@@ -65,13 +72,13 @@ class AccountProfile extends Component {
     reader.readAsDataURL(file);
   };
   render() {
-    const { name, imageData, imageExists } = this.state;
+    const { name, imageData, imageExists, mediaItemName } = this.state;
     const { authUser } = this.props;
 
     return (
       <div class="account-profile">
         {name ? (
-          <div style={{ display: "flex" }}>
+          <div class="profile-info">
             <div class="profile-picture-container">
               <input
                 type="file"
@@ -105,10 +112,19 @@ class AccountProfile extends Component {
         ) : (
           <FontAwesomeIcon icon="spinner" spin />
         )}
+        <InputField
+          value={mediaItemName}
+          field="mediaItemName"
+          label="Media Item"
+          type="text"
+          placeholder="Name of media item"
+          setState={obj => this.setState(obj)}
+        />
         <MediaUploader
           uploadFile={this.uploadFile}
           authUser={authUser}
           mediaUploader={this.mediaUploader}
+          mediaItemName={mediaItemName}
         />
       </div>
     );
