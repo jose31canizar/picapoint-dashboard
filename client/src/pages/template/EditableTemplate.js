@@ -15,6 +15,9 @@ import CodeUtils from "draft-js-code";
 import "./EditableTemplate.styl";
 import ColorPicker, { colorPickerPlugin } from "draft-js-color-picker";
 import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
+import { db, storage } from "../../firebase";
+import Notification from "../../items/notification/Notification";
+import { Map } from "immutable";
 
 const presetColors = [
   "#ff00aa",
@@ -63,7 +66,7 @@ const ColorControls = props => {
   );
 };
 
-const colorStyleMap = {
+export const colorStyleMap = {
   red: {
     color: "rgba(255, 0, 0, 1.0)"
   },
@@ -97,7 +100,8 @@ const styles = {
     marginTop: 20,
     fontSize: "1rem",
     minHeight: 400,
-    paddingTop: 20
+    paddingTop: 20,
+    width: "100%"
   },
   controls: {
     fontFamily: "'Avenir', sans-serif",
@@ -135,7 +139,7 @@ class StyleButton extends React.Component {
   }
 }
 
-const styleMap = {
+export const styleMap = {
   STRIKETHROUGH: {
     textDecoration: "line-through"
   },
@@ -152,6 +156,21 @@ const styleMap = {
     fontSize: "1rem"
   }
 };
+
+const blockRenderMap = Map({
+  "header-one": {
+    element: "h1"
+  },
+  "header-two": {
+    element: "h2"
+  },
+  "header-three": {
+    element: "h3"
+  },
+  unstyled: {
+    element: "p"
+  }
+});
 
 var INLINE_STYLES = [
   { label: "Bold", style: "BOLD" },
@@ -183,10 +202,26 @@ const InlineStyleControls = props => {
   );
 };
 
+function blockRenderer(contentBlock) {
+  const type = contentBlock.getType();
+  if (type === "atomic") {
+    return {
+      component: <div>I AM A COMPONENT</div>,
+      editable: false,
+      props: {
+        foo: "bar"
+      }
+    };
+  }
+}
+
 function getBlockStyle(block) {
   switch (block.getType()) {
     case "blockquote":
-      return "RichEditor-blockquote";
+      return "superFancyBlockquote";
+    case "header-one":
+      console.log("h1 detected!");
+      return "header-one";
     default:
       return null;
   }
@@ -198,21 +233,23 @@ class EditableTemplate extends Component {
   picker = colorPickerPlugin(this.onChange, this.getEditorState);
   constructor(props) {
     super(props);
-    const content = window.localStorage.getItem("content");
-    if (content) {
-      this.state = {
-        editorState: EditorState.createWithContent(
-          convertFromRaw(JSON.parse(content))
-        )
-      };
-    } else {
-      this.state = {
-        editorState: EditorState.createEmpty()
-      };
-    }
+    this.state = {
+      editorState: EditorState.createEmpty(),
+      savePageMessage: null
+    };
   }
 
   componentDidMount() {
+    const { editing } = this.props;
+
+    db.loadPageIfExists(editing).then(content => {
+      console.log(content);
+      if (content) {
+        this.setState({
+          editorState: EditorState.createWithContent(convertFromRaw(content))
+        });
+      }
+    });
     this.focus();
   }
   focus = () => this.editor.focus();
@@ -252,16 +289,30 @@ class EditableTemplate extends Component {
 
   handleKeyCommand = command => {
     const { editorState } = this.state;
+    const { editing } = this.props;
     let newState;
 
     if (command === "editor-save") {
-      console.log("save file");
       console.log(editorState.getCurrentContent().getPlainText());
+      storage
+        .savePage(
+          editing,
+          JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+        )
+        .then(() => {
+          console.log("saved the file!");
 
-      window.localStorage.setItem(
-        "content",
-        JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-      );
+          this.setState(
+            {
+              savePageMessage: `saved ${editing} page`
+            },
+            () =>
+              setTimeout(() => {
+                this.setState({ savePageMessage: null });
+              }, 2000)
+          );
+        });
+
       return "handled";
     }
 
@@ -322,9 +373,10 @@ class EditableTemplate extends Component {
   };
 
   render() {
-    const { editorState } = this.state;
+    const { editorState, savePageMessage } = this.state;
     return (
       <div class="article rich-editor" style={styles.root}>
+        {savePageMessage && <Notification text={savePageMessage} />}
         <ColorPicker
           toggleColor={color => this.picker.addColor(color)}
           presetColors={presetColors}
@@ -350,6 +402,7 @@ class EditableTemplate extends Component {
             onTab={this.onTab}
             spellCheck={true}
             ref={ref => (this.editor = ref)}
+            blockRendererFn={blockRenderer}
           />
         </div>
       </div>

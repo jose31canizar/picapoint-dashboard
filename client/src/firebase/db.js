@@ -20,6 +20,24 @@ export const doUpdateUserField = (field, folder, value, id) =>
       [field]: value
     });
 
+export const doUpdatePage = (field, data) =>
+  db.ref("pages").update({
+    [field]: data
+  });
+
+export const loadPageIfExists = (field, cb) =>
+  db
+    .ref("pages")
+    .child(field)
+    .once("value")
+    .then(function(snapshot) {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      }
+    })
+    .then(url => fetch(url, { mode: "cors" }))
+    .then(res => res.json());
+
 export const loadAssetIfExists = (field, cb) =>
   db
     .ref(`users/${getId()}`)

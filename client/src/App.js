@@ -96,6 +96,7 @@ class App extends Component {
                             <EditablePage
                               path={page.path}
                               className={page.path}
+                              editing={page.editing}
                             />
                           ) : (
                             <CustomPage

@@ -21,7 +21,16 @@
     "image": "color-burst",
     "color": "#007CAD",
     "icon": "bullhorn",
-    "type": "editable"
+    "type": "markdown"
+  },
+  {
+    "path": "edit-promotions",
+    "title": "Kampanjer",
+    "image": "color-burst",
+    "color": "#007CAD",
+    "icon": "bullhorn",
+    "type": "editable",
+    "editing": "promotions"
   },
   {
     "path": "templates",

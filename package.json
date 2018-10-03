@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "draft-js-export-html": "^1.2.0",
+    "draftjs-to-html": "^0.8.4",
+    "immutable": "^3.8.2"
+  }
+}

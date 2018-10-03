@@ -5,6 +5,10 @@ import withAuthorization from "../../components/withAuthorization";
 import Footer from "../../layout/Footer";
 import DOMPurify from "dompurify";
 import { db } from "../../firebase";
+import { convertFromRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import { stateToHTML } from "draft-js-export-html";
+import { styleMap, colorStyleMap } from "./EditableTemplate";
 import AuthUserContext from "../../components/AuthUserContext";
 
 class ArticleTemplate extends Component {
@@ -14,35 +18,68 @@ class ArticleTemplate extends Component {
       this.setState({ mediaItems }, () => {
         const { path } = this.props;
         if (path) {
-          import(`../${path}.md`).then(markdown => {
-            const { mediaItems } = this.state;
-            let mediaItemNames = Object.keys(mediaItems);
-            console.log(mediaItemNames);
+          db.loadPageIfExists(path)
+            .then(data => {
+              console.log("json", data);
+              console.log(styleMap);
 
-            let newMarkdown = mediaItemNames.reduce((acc, name) => {
-              const regex = new RegExp(name, "gi");
-              return acc.replace(
-                regex,
-                `<img class="markdown-image" src="${mediaItems[name]}"/>`
+              let newMap = Object.entries({
+                ...styleMap,
+                ...colorStyleMap
+              }).reduce(
+                (acc, style) => ({ ...acc, [style[0]]: { style: style[1] } }),
+                {}
               );
-            }, markdown.default);
 
-            this.setState(
-              {
-                markdown: newMarkdown
-              },
-              () => {
-                const collection = document
-                  .querySelector("article")
-                  .getElementsByTagName("H3");
+              console.log(newMap);
 
-                const links = [].slice
-                  .call(collection)
-                  .map(item => item.innerText);
-                this.setState({ links });
-              }
-            );
-          });
+              let options = {
+                inlineStyles: {
+                  ...newMap,
+                  // Override default element (`strong`).
+                  BOLD: { element: "b" },
+                  ITALIC: {
+                    // Add custom attributes. You can also use React-style `className`.
+                    attributes: { class: "foo" },
+                    // Use camel-case. Units (`px`) will be added where necessary.
+                    style: { fontSize: 12 }
+                  },
+                  // Use a custom inline style. Default element is `span`.
+                  RED: { style: { color: "#900" } }
+                }
+              };
+
+              return stateToHTML(convertFromRaw(data), options);
+            })
+            .then(markdown => {
+              const { mediaItems } = this.state;
+              let mediaItemNames = Object.keys(mediaItems);
+              console.log(mediaItemNames);
+
+              let newMarkdown = mediaItemNames.reduce((acc, name) => {
+                const regex = new RegExp(`\\[${name}\\]`, "g");
+                return acc.replace(
+                  regex,
+                  `<img class="markdown-image" src="${mediaItems[name]}"/>`
+                );
+              }, markdown);
+
+              this.setState(
+                {
+                  markdown: newMarkdown
+                },
+                () => {
+                  const collection = document
+                    .querySelector("article")
+                    .getElementsByTagName("H3");
+
+                  const links = [].slice
+                    .call(collection)
+                    .map(item => item.innerText);
+                  this.setState({ links });
+                }
+              );
+            });
         }
       });
     });

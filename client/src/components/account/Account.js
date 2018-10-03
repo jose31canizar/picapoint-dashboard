@@ -8,6 +8,7 @@ import { storage, db } from "../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputField from "../../items/input-field/InputField";
 import Button from "../../items/button/Button";
+import Notification from "../../items/notification/Notification";
 import "./Account.styl";
 
 const MediaUploader = ({
@@ -106,11 +107,7 @@ class AccountProfile extends Component {
 
     return (
       <div class="account-profile">
-        {uploadMessage && (
-          <div class="upload-notification">
-            <p>{uploadMessage}</p>
-          </div>
-        )}
+        {uploadMessage && <Notification text={uploadMessage} />}
         {name ? (
           <div class="profile-info">
             <div class="profile-picture-container">
