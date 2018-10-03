@@ -12,10 +12,13 @@ export const doUpdateUser = newData =>
 
 export const onceGetUsers = () => db.ref("users").once("value");
 
-export const doUpdateUserField = (field, value, id) =>
-  db.ref(`users/${id}`).update({
-    [field]: value
-  });
+export const doUpdateUserField = (field, folder, value, id) =>
+  db
+    .ref(`users/${id}`)
+    .child(folder)
+    .update({
+      [field]: value
+    });
 
 export const loadAssetIfExists = (field, cb) =>
   db
@@ -24,5 +27,16 @@ export const loadAssetIfExists = (field, cb) =>
     .once("value", function(snapshot) {
       if (snapshot.exists()) {
         cb(snapshot.val());
+      }
+    });
+
+export const loadFolderIfExists = field =>
+  db
+    .ref(`users/${getId()}`)
+    .child(field)
+    .once("value")
+    .then(function(snapshot) {
+      if (snapshot.exists()) {
+        return snapshot.val();
       }
     });

@@ -15,6 +15,19 @@
   grid-template-rows repeat(2, 1fr)
 
 .account
+  .upload-notification
+    animation fade-in 0.75s
+    position fixed
+    top 5rem
+    left 1rem
+    background-color #2c2334
+    padding 0.5rem 1rem
+    border-radius 0.25rem
+
+    p
+      color white
+      font-size 0.75rem
+
   .profile-info
     display flex
     padding 2rem
@@ -38,14 +51,8 @@
     margin 1rem
     cursor pointer
 
-    label
-      width 5rem
-      padding 0.9rem 1.5rem
-      background #6969984f
-
-  .media-uploader-container:hover label
-    background rgba(3, 3, 35, 0.55)
-    color white
+    .file-upload-button
+      display block
 
   .profile-picture-container
     width 5rem

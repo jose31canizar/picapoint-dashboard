@@ -1,16 +1,14 @@
 import { storage } from "./firebase";
 import { doUpdateUserField } from "./db";
 
-export const uploadFile = (name, file, metadata, id, field) =>
+export const uploadFile = (name, file, metadata, id, field, folder) =>
   storage
     .ref()
-    .child(name)
+    .child(`media/${name}`)
     .put(file, metadata)
     .then(snapshot => snapshot.ref.getDownloadURL())
     .then(url => {
-      doUpdateUserField(field, url, id).then(() => {
-        console.log("saved image!");
-      });
+      return doUpdateUserField(field, folder, url, id);
     })
     .catch(error => {
       switch (error.code) {
@@ -24,4 +22,14 @@ export const uploadFile = (name, file, metadata, id, field) =>
           console.log("unknown user occurred, inspect error.serverResponse");
           break;
       }
+    });
+
+export const savePage = (name, data) =>
+  storage
+    .ref()
+    .child(`pages/${name}`)
+    .put(data)
+    .then(snapshot => snapshot.ref.getDownloadURL())
+    .then(url => {
+      console.log("saved page!");
     });

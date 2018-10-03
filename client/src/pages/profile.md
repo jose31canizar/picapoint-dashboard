@@ -1,7 +1,10 @@
 ##Profilguide
 Her finner du retningslinjer for hvordan vår logo og profil skal benyttes. Du kan også laste ned logoer og elementer.
 
-image-one
+third_image
+
+
+media_item_one
 
 
 ###Logo

@@ -7,6 +7,7 @@ import withAuthorization from "../withAuthorization";
 import { storage, db } from "../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputField from "../../items/input-field/InputField";
+import Button from "../../items/button/Button";
 import "./Account.styl";
 
 const MediaUploader = ({
@@ -22,12 +23,22 @@ const MediaUploader = ({
       id="media-file"
       ref={ref => (mediaUploader = ref)}
       onChange={e =>
-        uploadFile(e, mediaUploader, authUser.uid, mediaItemName, false)
+        uploadFile(
+          e,
+          mediaUploader,
+          authUser.uid,
+          mediaItemName,
+          false,
+          "media"
+        )
       }
     />
-    <label for="media-file" class="file-upload-button">
-      upload media
-    </label>
+
+    <Button
+      disabled={!mediaItemName}
+      htmlFor="media-file"
+      label="Upload Media"
+    />
   </div>
 );
 
@@ -36,22 +47,34 @@ class AccountProfile extends Component {
     imageData: null,
     imageExists: false,
     name: null,
-    mediaItemName: null
+    mediaItemName: null,
+    uploadMessage: null
   };
-  uploadFile = (e, uploader, id, field, preview) => {
+  uploadFile = (e, uploader, id, field, preview, folder) => {
     const file = uploader.files[0];
     const type = file.type;
-    const name = +new Date() + "-" + file.name;
+    // const name = +new Date() + "-" + file.name;
+    const name = file.name;
     const metadata = {
       contentType: type
     };
     if (preview) {
       this.previewImage(file, type);
     }
-    storage.uploadFile(name, file, metadata, id, field);
+    storage.uploadFile(name, file, metadata, id, field, folder).then(() =>
+      this.setState(
+        {
+          uploadMessage: `uploaded ${name} to storage database.`
+        },
+        () =>
+          setTimeout(() => {
+            this.setState({ uploadMessage: null });
+          }, 3000)
+      )
+    );
   };
   componentDidMount() {
-    db.loadAssetIfExists("profile_picture", imageData =>
+    db.loadAssetIfExists("profile/profile_picture", imageData =>
       this.setState({ imageData, imageExists: true })
     );
     db.loadAssetIfExists("name", name => this.setState({ name }));
@@ -72,11 +95,22 @@ class AccountProfile extends Component {
     reader.readAsDataURL(file);
   };
   render() {
-    const { name, imageData, imageExists, mediaItemName } = this.state;
+    const {
+      name,
+      imageData,
+      imageExists,
+      mediaItemName,
+      uploadMessage
+    } = this.state;
     const { authUser } = this.props;
 
     return (
       <div class="account-profile">
+        {uploadMessage && (
+          <div class="upload-notification">
+            <p>{uploadMessage}</p>
+          </div>
+        )}
         {name ? (
           <div class="profile-info">
             <div class="profile-picture-container">
@@ -92,7 +126,8 @@ class AccountProfile extends Component {
                     this.fileUploader,
                     authUser.uid,
                     "profile_picture",
-                    true
+                    true,
+                    "profile"
                   )
                 }
               />

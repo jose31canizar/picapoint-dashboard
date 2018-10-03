@@ -10,54 +10,53 @@ import AuthUserContext from "../../components/AuthUserContext";
 class ArticleTemplate extends Component {
   state = { markdown: "<p>loading...</p>", links: [], imageLink: null };
   componentDidMount() {
-    db.loadAssetIfExists("media_image", imageLink =>
-      this.setState({
-        imageLink
-      })
-    );
+    db.loadFolderIfExists("media").then(mediaItems => {
+      this.setState({ mediaItems }, () => {
+        const { path } = this.props;
+        if (path) {
+          import(`../${path}.md`).then(markdown => {
+            const { mediaItems } = this.state;
+            let mediaItemNames = Object.keys(mediaItems);
+            console.log(mediaItemNames);
 
-    const { path } = this.props;
-    if (path) {
-      import(`../${path}.md`)
-        .then(res => {
-          console.log();
-          return res;
-        })
-        .then(markdown => {
-          this.setState(
-            {
-              markdown: markdown.default
-            },
-            () => {
-              const collection = document
-                .querySelector("article")
-                .getElementsByTagName("H3");
+            let newMarkdown = mediaItemNames.reduce((acc, name) => {
+              const regex = new RegExp(name, "gi");
+              return acc.replace(
+                regex,
+                `<img class="markdown-image" src="${mediaItems[name]}"/>`
+              );
+            }, markdown.default);
 
-              const links = [].slice
-                .call(collection)
-                .map(item => item.innerText);
-              this.setState({ links });
-            }
-          );
-        });
-    }
+            this.setState(
+              {
+                markdown: newMarkdown
+              },
+              () => {
+                const collection = document
+                  .querySelector("article")
+                  .getElementsByTagName("H3");
+
+                const links = [].slice
+                  .call(collection)
+                  .map(item => item.innerText);
+                this.setState({ links });
+              }
+            );
+          });
+        }
+      });
+    });
   }
   render() {
     const { style, className, path } = this.props;
     const { markdown, links, imageLink } = this.state;
 
-    const regex = /image-one/gi;
-
-    const newMarkdown = markdown.replace(
-      regex,
-      `<img class="markdown-image" src="${imageLink}"/>`
-    );
     return (
       <div class="article">
         <section className={className}>
           <article
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(newMarkdown)
+              __html: DOMPurify.sanitize(markdown)
             }}
           />
           <aside>
