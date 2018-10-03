@@ -31,22 +31,8 @@ class ArticleTemplate extends Component {
                 {}
               );
 
-              console.log(newMap);
-
               let options = {
-                inlineStyles: {
-                  ...newMap,
-                  // Override default element (`strong`).
-                  BOLD: { element: "b" },
-                  ITALIC: {
-                    // Add custom attributes. You can also use React-style `className`.
-                    attributes: { class: "foo" },
-                    // Use camel-case. Units (`px`) will be added where necessary.
-                    style: { fontSize: 12 }
-                  },
-                  // Use a custom inline style. Default element is `span`.
-                  RED: { style: { color: "#900" } }
-                }
+                inlineStyles: newMap
               };
 
               return stateToHTML(convertFromRaw(data), options);

@@ -8,7 +8,9 @@ import {
   getDefaultKeyBinding,
   KeyBindingUtil,
   convertToRaw,
-  convertFromRaw
+  convertFromRaw,
+  convertFromHTML,
+  CompositeDecorator
 } from "draft-js";
 import "draft-js/dist/Draft.css";
 import CodeUtils from "draft-js-code";
@@ -17,6 +19,7 @@ import ColorPicker, { colorPickerPlugin } from "draft-js-color-picker";
 import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
 import { db, storage } from "../../firebase";
 import Notification from "../../items/notification/Notification";
+import Suggestions from "../../items/suggestions/Suggestions";
 import { Map } from "immutable";
 
 const presetColors = [
@@ -92,7 +95,7 @@ export const colorStyleMap = {
 
 const styles = {
   root: {
-    fontFamily: "'Avenir', serif"
+    fontFamily: "Work Sans, serif"
   },
   editor: {
     borderTop: "1px solid #ddd",
@@ -104,7 +107,6 @@ const styles = {
     width: "100%"
   },
   controls: {
-    fontFamily: "'Avenir', sans-serif",
     marginBottom: 10,
     userSelect: "none"
   },
@@ -227,15 +229,37 @@ function getBlockStyle(block) {
   }
 }
 
+const Hashtag = ({ children }) => {
+  return <span style={{ background: "lightBlue" }}>{children}</span>;
+};
+
+const findHashtagEntities = (contentBlock, callback, contentState) => {
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity();
+    return (
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === "HASHTAG"
+    );
+  }, callback);
+};
+
 class EditableTemplate extends Component {
   getEditorState = () => this.state.editorState;
-  onChange = editorState => this.setState({ editorState });
+
   picker = colorPickerPlugin(this.onChange, this.getEditorState);
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty(),
-      savePageMessage: null
+      editorState: EditorState.createEmpty(
+        new CompositeDecorator([
+          {
+            strategy: findHashtagEntities,
+            component: Hashtag
+          }
+        ])
+      ),
+      savePageMessage: null,
+      autocompleteState: null
     };
   }
 
@@ -243,7 +267,6 @@ class EditableTemplate extends Component {
     const { editing } = this.props;
 
     db.loadPageIfExists(editing).then(content => {
-      console.log(content);
       if (content) {
         this.setState({
           editorState: EditorState.createWithContent(convertFromRaw(content))
@@ -253,6 +276,61 @@ class EditableTemplate extends Component {
     this.focus();
   }
   focus = () => this.editor.focus();
+  onChange = editorState =>
+    this.setState({ editorState }, () => {
+      const triggerRange = this.getTriggerRange("#");
+      if (!triggerRange) {
+        this.setState({ autocompleteState: null });
+        return;
+      }
+
+      this.setState({
+        autocompleteState: {
+          searchText: triggerRange.text.slice(1, triggerRange.text.length),
+          cursor: {
+            x: triggerRange.x,
+            y: triggerRange.y
+          }
+        }
+      });
+    });
+
+  getInsertRange = (autocompleteState, editorState) => {
+    const currentSelectionState = editorState.getSelection();
+    const end = currentSelectionState.getAnchorOffset();
+    const anchorKey = currentSelectionState.getAnchorKey();
+    const currentContent = editorState.getCurrentContent();
+    const currentBlock = currentContent.getBlockForKey(anchorKey);
+    const blockText = currentBlock.getText();
+    const start = blockText.substring(0, end).lastIndexOf("#");
+
+    return {
+      start,
+      end
+    };
+  };
+  getTriggerRange = trigger => {
+    const selection = window.getSelection();
+    if (selection.rangeCount === 0) return null;
+    const range = selection.getRangeAt(0);
+    const text = range.startContainer.textContent.substring(
+      0,
+      range.startOffset
+    );
+    if (/s+$/.test(text)) return null;
+    const index = text.lastIndexOf(trigger);
+    if (index === -1) return null;
+
+    const { x, y } = range.getBoundingClientRect();
+
+    return {
+      text: text.substring(index),
+      start: index,
+      end: range.startOffset,
+      x,
+      y
+    };
+  };
 
   toggleColor = toggledColor => {
     const { editorState } = this.state;
@@ -372,8 +450,62 @@ class EditableTemplate extends Component {
     return "handled";
   };
 
+  addHashTag = (editorState, autocompleteState, hashtag) => {
+    /* 1 */
+    const { start, end } = this.getInsertRange(autocompleteState, editorState);
+
+    /* 2 */
+    const currentSelectionState = editorState.getSelection();
+    const selection = currentSelectionState.merge({
+      anchorOffset: start,
+      focusOffset: end
+    });
+
+    /* 3 */
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      "HASHTAG",
+      "IMMUTABLE",
+      {
+        hashtag
+      }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    console.log(hashtag);
+
+    /* 4 */
+    let newContentState = Modifier.replaceText(
+      contentStateWithEntity,
+      selection,
+      `#${hashtag}`,
+      null,
+      entityKey
+    );
+
+    /* 5 */
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      `insert-hashtag`
+    );
+
+    return EditorState.forceSelection(
+      newEditorState,
+      newContentState.getSelectionAfter()
+    );
+  };
+
+  renderSuggestion = text => {
+    const { editorState, autocompleteState } = this.state;
+
+    this.onChange(this.addHashTag(editorState, autocompleteState, text));
+
+    this.setState({ autocompleteState: null });
+  };
+
   render() {
-    const { editorState, savePageMessage } = this.state;
+    const { editorState, savePageMessage, autocompleteState } = this.state;
     return (
       <div class="article rich-editor" style={styles.root}>
         {savePageMessage && <Notification text={savePageMessage} />}
@@ -403,6 +535,10 @@ class EditableTemplate extends Component {
             spellCheck={true}
             ref={ref => (this.editor = ref)}
             blockRendererFn={blockRenderer}
+          />
+          <Suggestions
+            autocompleteState={autocompleteState}
+            renderSuggestion={text => this.renderSuggestion(text)}
           />
         </div>
       </div>
