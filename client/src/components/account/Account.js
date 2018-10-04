@@ -10,6 +10,7 @@ import InputField from "../../items/input-field/InputField";
 import Button from "../../items/button/Button";
 import Notification from "../../items/notification/Notification";
 import "./Account.styl";
+import obj2fd from "obj2fd";
 
 const MediaUploader = ({
   uploadFile,
@@ -62,7 +63,24 @@ class AccountProfile extends Component {
     if (preview) {
       this.previewImage(file, type);
     }
-    storage.uploadFile(name, file, metadata, id, field, folder).then(() =>
+
+    const body = {
+      name,
+      file,
+      metadata,
+      id,
+      field,
+      folder
+    };
+
+    const data = obj2fd(body);
+
+    console.log(data);
+
+    fetch("http://localhost:9001/storage-upload", {
+      method: "post",
+      body: data
+    }).then(() =>
       this.setState(
         {
           uploadMessage: `uploaded ${name} to storage database.`

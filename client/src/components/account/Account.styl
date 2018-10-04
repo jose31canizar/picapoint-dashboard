@@ -1,6 +1,5 @@
 .account section.auth.container
   position relative
-  display inline
 
   @media all and (max-width: 1200px)
     margin-top 5rem
@@ -9,7 +8,7 @@
   display grid
 
   @media all and (max-width: 1200px)
-    display flex
+    display block
 
   grid-template-columns repeat(2, 1fr)
   grid-template-rows repeat(2, 1fr)
@@ -49,6 +48,10 @@ input[type=file]
   position relative
   overflow hidden
   cursor pointer
+
+  img
+    height 100%
+    object-fit cover
 
   label
     width 5rem

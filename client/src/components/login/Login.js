@@ -24,8 +24,7 @@ class Login extends Component {
     const { email, password } = this.state;
 
     e.preventDefault();
-    auth
-      .doSignInWithEmailAndPassword(email, password)
+    fetch("http://localhost:9001/login", { body: { email, password } })
       .then(() => {
         this.setState({ ...INITIAL_STATE }, () => {
           history.push(HOME);
