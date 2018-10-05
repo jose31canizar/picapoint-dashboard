@@ -20,9 +20,9 @@ class ArticleTemplate extends Component {
         if (path) {
           db.loadPageIfExists(path)
             .then(data => {
-              console.log("json", data);
-              console.log(styleMap);
-
+              if (!data) {
+                return null;
+              }
               let newMap = Object.entries({
                 ...styleMap,
                 ...colorStyleMap
@@ -38,6 +38,9 @@ class ArticleTemplate extends Component {
               return stateToHTML(convertFromRaw(data), options);
             })
             .then(markdown => {
+              if (!markdown) {
+                return null;
+              }
               const { mediaItems } = this.state;
               let mediaItemNames = Object.keys(mediaItems);
               console.log(mediaItemNames);
@@ -65,7 +68,12 @@ class ArticleTemplate extends Component {
                   this.setState({ links });
                 }
               );
-            });
+            })
+            .catch(err =>
+              this.setState({
+                markdown: "<p>This page does not exist yet.</p>"
+              })
+            );
         }
       });
     });

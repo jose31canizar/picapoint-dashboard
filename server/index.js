@@ -21,7 +21,9 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.post("/login", function({ body: { email, password } }, res) {
-  auth.doSignInWithEmailAndPassword(email, password);
+  auth
+    .doSignInWithEmailAndPassword(email, password)
+    .then(() => res.send("success"));
 });
 
 app.post("/storage-upload", upload.single("file"), (req, res) => {

@@ -31,12 +31,18 @@ export const loadPageIfExists = (field, cb) =>
     .child(field)
     .once("value")
     .then(function(snapshot) {
+      console.log(snapshot.val());
       if (snapshot.exists()) {
         return snapshot.val();
       }
     })
     .then(url => fetch(url, { mode: "cors" }))
-    .then(res => res.json());
+    .then(res => {
+      return res.json();
+    })
+    .catch(err => {
+      return Promise.reject(err);
+    });
 
 export const loadAssetIfExists = (field, cb) =>
   db

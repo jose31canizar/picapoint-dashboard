@@ -54,6 +54,9 @@ class AccountProfile extends Component {
   };
   uploadFile = (e, uploader, id, field, preview, folder) => {
     const file = uploader.files[0];
+    if (!file) {
+      return;
+    }
     const type = file.type;
     // const name = +new Date() + "-" + file.name;
     const name = file.name;
