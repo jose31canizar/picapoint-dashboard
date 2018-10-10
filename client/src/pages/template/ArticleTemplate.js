@@ -23,11 +23,29 @@ class ArticleTemplate extends Component {
               if (!data) {
                 return null;
               }
+              console.log(styleMap);
+
               let newMap = Object.entries({
                 ...styleMap,
                 ...colorStyleMap
               }).reduce(
-                (acc, style) => ({ ...acc, [style[0]]: { style: style[1] } }),
+                (acc, style, i) =>
+                  style[0] === "H3"
+                    ? {
+                        ...acc,
+                        [style[0]]: {
+                          element: style[0],
+                          attributes: { id: `scroll-item-${i}` },
+                          style: style[1]
+                        }
+                      }
+                    : {
+                        ...acc,
+                        [style[0]]: {
+                          element: style[0],
+                          style: style[1]
+                        }
+                      },
                 {}
               );
 
@@ -64,7 +82,7 @@ class ArticleTemplate extends Component {
 
                   const links = [].slice
                     .call(collection)
-                    .map(item => item.innerText);
+                    .map((item, i) => ({ name: item.innerText, id: item.id }));
                   this.setState({ links });
                 }
               );
@@ -92,12 +110,8 @@ class ArticleTemplate extends Component {
           />
           <aside>
             <ol class="sidebar-menu">
-              {links.map((name, i) => (
-                <SmoothScroll
-                  section={name.replace(/\s+/g, "-").toLowerCase()}
-                  key={i}
-                  className="smooth-scroll"
-                >
+              {links.map(({ name, id }, i) => (
+                <SmoothScroll section={id} key={i} className="smooth-scroll">
                   <li>{name}</li>
                 </SmoothScroll>
               ))}

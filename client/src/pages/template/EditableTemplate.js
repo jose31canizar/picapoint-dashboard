@@ -1,17 +1,5 @@
 import React, { Component } from "react";
 import withAuthorization from "../../components/withAuthorization";
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-  Modifier,
-  getDefaultKeyBinding,
-  KeyBindingUtil,
-  convertToRaw,
-  convertFromRaw,
-  convertFromHTML,
-  CompositeDecorator
-} from "draft-js";
 import "draft-js/dist/Draft.css";
 import CodeUtils from "draft-js-code";
 import "./EditableTemplate.styl";
@@ -21,6 +9,90 @@ import { db, storage } from "../../firebase";
 import Notification from "../../items/notification/Notification";
 import Suggestions from "../../items/suggestions/Suggestions";
 import { Map } from "immutable";
+import {
+  EditorState,
+  RichUtils,
+  Modifier,
+  getDefaultKeyBinding,
+  KeyBindingUtil,
+  convertToRaw,
+  convertFromRaw
+} from "draft-js";
+
+import Editor from "draft-js-plugins-editor";
+import createHashtagPlugin from "draft-js-hashtag-plugin";
+import createLinkifyPlugin from "draft-js-linkify-plugin";
+import createMentionPlugin, {
+  defaultSuggestionsFilter
+} from "draft-js-mention-plugin";
+import mentions from "./mentions";
+import mentionsStyles from "./mentionsStyles.css";
+import "draft-js-hashtag-plugin/lib/plugin.css";
+
+const linkifyPlugin = createLinkifyPlugin();
+const hashtagPlugin = createHashtagPlugin();
+
+const positionSuggestions = ({ state, props }) => {
+  let transform;
+  let transition;
+
+  if (state.isActive && props.suggestions.length > 0) {
+    transform = "scaleY(1)";
+    transition = "all 0.25s cubic-bezier(.3,1.2,.2,1)";
+  } else if (state.isActive) {
+    transform = "scaleY(0)";
+    transition = "all 0.25s cubic-bezier(.3,1,.2,1)";
+  }
+
+  return {
+    transform,
+    transition,
+    padding: 50
+  };
+};
+const mentionPlugin = createMentionPlugin({
+  mentions,
+  entityMutability: "IMMUTABLE",
+  theme: mentionsStyles,
+  positionSuggestions,
+  mentionPrefix: "@",
+  supportWhitespace: true
+});
+const { MentionSuggestions } = mentionPlugin;
+
+const Entry = props => {
+  const {
+    mention,
+    theme,
+    searchValue, // eslint-disable-line no-unused-vars
+    isFocused, // eslint-disable-line no-unused-vars
+    ...parentProps
+  } = props;
+
+  return (
+    <div {...parentProps}>
+      <div className={theme.mentionSuggestionsEntryContainer}>
+        <div className={theme.mentionSuggestionsEntryContainerLeft}>
+          <img
+            src={mention.avatar}
+            className={theme.mentionSuggestionsEntryAvatar}
+            role="presentation"
+          />
+        </div>
+
+        <div className={theme.mentionSuggestionsEntryContainerRight}>
+          <div className={theme.mentionSuggestionsEntryText}>
+            {mention.name}
+          </div>
+
+          <div className={theme.mentionSuggestionsEntryTitle}>
+            {mention.title}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const presetColors = [
   "#ff00aa",
@@ -159,21 +231,6 @@ export const styleMap = {
   }
 };
 
-const blockRenderMap = Map({
-  "header-one": {
-    element: "h1"
-  },
-  "header-two": {
-    element: "h2"
-  },
-  "header-three": {
-    element: "h3"
-  },
-  unstyled: {
-    element: "p"
-  }
-});
-
 var INLINE_STYLES = [
   { label: "Bold", style: "BOLD" },
   { label: "Italic", style: "ITALIC" },
@@ -204,68 +261,19 @@ const InlineStyleControls = props => {
   );
 };
 
-function blockRenderer(contentBlock) {
-  const type = contentBlock.getType();
-  if (type === "atomic") {
-    return {
-      component: <div>I AM A COMPONENT</div>,
-      editable: false,
-      props: {
-        foo: "bar"
-      }
-    };
-  }
-}
-
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case "blockquote":
-      return "superFancyBlockquote";
-    case "header-one":
-      console.log("h1 detected!");
-      return "header-one";
-    default:
-      return null;
-  }
-}
-
-const Hashtag = ({ children }) => {
-  return <span style={{ background: "lightBlue" }}>{children}</span>;
-};
-
-const findHashtagEntities = (contentBlock, callback, contentState) => {
-  contentBlock.findEntityRanges(character => {
-    const entityKey = character.getEntity();
-    return (
-      entityKey !== null &&
-      contentState.getEntity(entityKey).getType() === "HASHTAG"
-    );
-  }, callback);
-};
-
 class EditableTemplate extends Component {
-  getEditorState = () => this.state.editorState;
-
-  picker = colorPickerPlugin(this.onChange, this.getEditorState);
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty(
-        new CompositeDecorator([
-          {
-            strategy: findHashtagEntities,
-            component: Hashtag
-          }
-        ])
-      ),
+      editorState: EditorState.createEmpty(),
       savePageMessage: null,
-      autocompleteState: null
+      autocompleteState: null,
+      suggestions: mentions
     };
   }
 
   componentDidMount() {
     const { editing } = this.props;
-
     db.loadPageIfExists(editing).then(content => {
       if (content) {
         this.setState({
@@ -273,65 +281,12 @@ class EditableTemplate extends Component {
         });
       }
     });
-    this.focus();
   }
-  focus = () => this.editor.focus();
-  onChange = editorState =>
-    this.setState({ editorState }, () => {
-      const triggerRange = this.getTriggerRange("#");
-      if (!triggerRange) {
-        this.setState({ autocompleteState: null });
-        return;
-      }
-
-      this.setState({
-        autocompleteState: {
-          searchText: triggerRange.text.slice(1, triggerRange.text.length),
-          cursor: {
-            x: triggerRange.x,
-            y: triggerRange.y
-          }
-        }
-      });
+  onChange = editorState => {
+    this.setState({
+      editorState
     });
-
-  getInsertRange = (autocompleteState, editorState) => {
-    const currentSelectionState = editorState.getSelection();
-    const end = currentSelectionState.getAnchorOffset();
-    const anchorKey = currentSelectionState.getAnchorKey();
-    const currentContent = editorState.getCurrentContent();
-    const currentBlock = currentContent.getBlockForKey(anchorKey);
-    const blockText = currentBlock.getText();
-    const start = blockText.substring(0, end).lastIndexOf("#");
-
-    return {
-      start,
-      end
-    };
   };
-  getTriggerRange = trigger => {
-    const selection = window.getSelection();
-    if (selection.rangeCount === 0) return null;
-    const range = selection.getRangeAt(0);
-    const text = range.startContainer.textContent.substring(
-      0,
-      range.startOffset
-    );
-    if (/s+$/.test(text)) return null;
-    const index = text.lastIndexOf(trigger);
-    if (index === -1) return null;
-
-    const { x, y } = range.getBoundingClientRect();
-
-    return {
-      text: text.substring(index),
-      start: index,
-      end: range.startOffset,
-      x,
-      y
-    };
-  };
-
   toggleColor = toggledColor => {
     const { editorState } = this.state;
     const selection = editorState.getSelection();
@@ -361,10 +316,10 @@ class EditableTemplate extends Component {
         toggledColor
       );
     }
-    console.log("toggled color");
     this.onChange(nextEditorState);
   };
-
+  getEditorState = () => this.state.editorState;
+  picker = colorPickerPlugin(this.onChange, this.getEditorState);
   handleKeyCommand = command => {
     const { editorState } = this.state;
     const { editing } = this.props;
@@ -409,7 +364,6 @@ class EditableTemplate extends Component {
     return "not-handled";
   };
   toggleInlineStyle = inlineStyle => {
-    console.log(inlineStyle);
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
     );
@@ -429,7 +383,6 @@ class EditableTemplate extends Component {
 
     return command || getDefaultKeyBinding(e);
   };
-
   onTab = e => {
     const { editorState } = this.state;
     if (CodeUtils.hasSelectionInBlock(editorState)) {
@@ -449,63 +402,17 @@ class EditableTemplate extends Component {
 
     return "handled";
   };
-
-  addHashTag = (editorState, autocompleteState, hashtag) => {
-    /* 1 */
-    const { start, end } = this.getInsertRange(autocompleteState, editorState);
-
-    /* 2 */
-    const currentSelectionState = editorState.getSelection();
-    const selection = currentSelectionState.merge({
-      anchorOffset: start,
-      focusOffset: end
+  focus = () => this.editor.focus();
+  onSearchChange = ({ value }) => {
+    this.setState({
+      suggestions: defaultSuggestionsFilter(value, mentions)
     });
-
-    /* 3 */
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(
-      "HASHTAG",
-      "IMMUTABLE",
-      {
-        hashtag
-      }
-    );
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-    console.log(hashtag);
-
-    /* 4 */
-    let newContentState = Modifier.replaceText(
-      contentStateWithEntity,
-      selection,
-      `#${hashtag}`,
-      null,
-      entityKey
-    );
-
-    /* 5 */
-    const newEditorState = EditorState.push(
-      editorState,
-      newContentState,
-      `insert-hashtag`
-    );
-
-    return EditorState.forceSelection(
-      newEditorState,
-      newContentState.getSelectionAfter()
-    );
   };
-
-  renderSuggestion = text => {
-    const { editorState, autocompleteState } = this.state;
-
-    this.onChange(this.addHashTag(editorState, autocompleteState, text));
-
-    this.setState({ autocompleteState: null });
-  };
-
   render() {
-    const { editorState, savePageMessage, autocompleteState } = this.state;
+    const { savePageMessage, editorState } = this.state;
+
+    console.log(editorState);
+
     return (
       <div class="article rich-editor" style={styles.root}>
         {savePageMessage && <Notification text={savePageMessage} />}
@@ -519,33 +426,30 @@ class EditableTemplate extends Component {
           onToggle={this.toggleInlineStyle}
         />
         <ColorControls editorState={editorState} onToggle={this.toggleColor} />
-        <div style={styles.editor} onClick={this.focus}>
-          <Editor
-            tabIndex="5"
-            blockStyleFn={getBlockStyle}
-            customStyleFn={this.picker.customStyleFn}
-            customStyleMap={{ ...styleMap, ...colorStyleMap }}
-            editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}
-            keyBindingFn={this.mapKeyToEditorCommand}
-            placeholder="Tell a story..."
-            handleReturn={this.handleReturn}
-            onTab={this.onTab}
-            spellCheck={true}
-            ref={ref => (this.editor = ref)}
-            blockRendererFn={blockRenderer}
-          />
-          <Suggestions
-            autocompleteState={autocompleteState}
-            renderSuggestion={text => this.renderSuggestion(text)}
-          />
-        </div>
+        <Editor
+          tabIndex="5"
+          customStyleFn={this.picker.customStyleFn}
+          customStyleMap={{ ...styleMap, ...colorStyleMap }}
+          placeholder="Tell a story..."
+          handleReturn={this.handleReturn}
+          onTab={this.onTab}
+          spellCheck={true}
+          editorState={this.state.editorState}
+          handleKeyCommand={this.handleKeyCommand}
+          keyBindingFn={this.mapKeyToEditorCommand}
+          onChange={this.onChange}
+          ref={ref => (this.editor = ref)}
+          plugins={[linkifyPlugin, hashtagPlugin, mentionPlugin]}
+        />
+        <MentionSuggestions
+          onSearchChange={this.onSearchChange}
+          suggestions={this.state.suggestions}
+          entryComponent={Entry}
+        />
       </div>
     );
   }
 }
-
 const authCondition = authUser => !!authUser;
 
 export default withAuthorization(authCondition)(EditableTemplate);

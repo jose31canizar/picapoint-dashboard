@@ -42,6 +42,9 @@ class SmoothScroll extends Component {
     var percentage;
     var startTime;
     var node = document.getElementById(id);
+    if (!node) {
+      return;
+    }
     var nodeTop = node.offsetTop;
     var nodeHeight = node.offsetHeight;
     var body = document.body;

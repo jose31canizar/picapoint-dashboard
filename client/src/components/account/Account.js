@@ -67,23 +67,23 @@ class AccountProfile extends Component {
       this.previewImage(file, type);
     }
 
-    const body = {
-      name,
-      file,
-      metadata,
-      id,
-      field,
-      folder
-    };
+    // const body = {
+    //   name,
+    //   file,
+    //   metadata,
+    //   id,
+    //   field,
+    //   folder
+    // };
 
-    const data = obj2fd(body);
+    // const data = obj2fd(body);
 
-    console.log(data);
+    // fetch("http://localhost:9001/storage-upload", {
+    //   method: "post",
+    //   body: data
+    // })
 
-    fetch("http://localhost:9001/storage-upload", {
-      method: "post",
-      body: data
-    }).then(() =>
+    storage.uploadFile(name, file, metadata, id, field, folder).then(() =>
       this.setState(
         {
           uploadMessage: `uploaded ${name} to storage database.`

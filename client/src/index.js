@@ -17,7 +17,8 @@ import {
   faTh,
   faSpinner,
   faCheck,
-  faTimes
+  faTimes,
+  faTrash
 } from "@fortawesome/fontawesome-free-solid";
 library.add(
   faCrown,
@@ -32,7 +33,8 @@ library.add(
   faTh,
   faSpinner,
   faCheck,
-  faTimes
+  faTimes,
+  faTrash
 );
 
 ReactDOM.render(<App />, document.getElementById("root"));

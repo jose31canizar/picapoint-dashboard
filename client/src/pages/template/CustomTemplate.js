@@ -41,16 +41,26 @@ const UserList = ({ users }) => (
     <h3>List of Users</h3>
     {Object.keys(users).map(key => (
       <div class="user" key={"user-" + key}>
-        <div class="profile-picture">
-          <img src={users[key].profile.profile_picture} />
-        </div>
         <div class="user-info">
-          <p class="name" key={key}>
-            {users[key].name}
-          </p>
-          <p class="email" key={key}>
-            {users[key].email}
-          </p>
+          <div class="profile-picture">
+            <img src={users[key].profile.profile_picture} />
+          </div>
+          <div class="user-caption">
+            <p class="name" key={key}>
+              {users[key].name}
+            </p>
+            <p class="email" key={key}>
+              {users[key].email}
+            </p>
+          </div>
+        </div>
+        <div class="user-actions">
+          <FontAwesomeIcon icon="angle-up" />
+          <FontAwesomeIcon icon="angle-down" />
+          <FontAwesomeIcon icon="lock" />
+          <FontAwesomeIcon icon="trash" />
+          <FontAwesomeIcon icon="times" />
+          <FontAwesomeIcon icon="bars" />
         </div>
       </div>
     ))}
