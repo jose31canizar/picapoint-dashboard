@@ -1,0 +1,154 @@
+@import './animations.styl'
+@import './page-transitions.styl'
+
+// @font-face
+// font-family: 'Avenir'
+// font-style: normal
+// font-weight: 400
+// src: url('../fonts/Avenir.eot')
+// src: local('Avenir'),
+// url('../fonts/Avenir.otf') format('otf'),
+// url('../fonts/avenir.ttf') format('ttf'),
+// url('../fonts/avenir.woff') format('woff')
+*
+  box-sizing border-box
+
+html
+  width 100%
+  position absolute
+  overflow-x hidden
+  overflow-y scroll
+  -webkit-overflow-scrolling auto
+  background background-color
+
+body
+  margin 0
+  padding 0
+  overflow-x hidden
+  overflow-y scroll
+  -webkit-overflow-scrolling auto
+  position absolute
+  -webkit-tap-highlight-color rgba(0 0 0 0)
+  background #f2f2f2
+
+  video
+    object-position 50% 50%
+    width 100vw
+    height 75vh
+    object-fit cover
+    overflow hidden
+    pointer-events none
+
+    @media all and (max-width: 1200px)
+      margin-left 0
+
+  #root
+    width 100vw
+    height 100vh
+
+  h1
+  h2
+  h3
+  h4
+  h5
+  h6
+  p
+  li
+  ul
+  button
+  b
+  label
+  time
+  a
+    font-family 'Work Sans', sans-serif
+    font-weight 100
+    margin 0
+    padding 0
+    user-select none
+    color #555056
+
+  input
+    margin 0
+    padding 0.5rem
+
+  input::placeholder
+    margin 0
+    padding 0
+
+  li
+    list-style-type decimal
+    font-size 0.9rem
+    margin 0.5rem 0
+    color #555056
+
+  label
+    font-size 1rem
+
+  a
+    text-decoration none
+    color #808080
+
+  h1
+    font-size 2.5em
+    color #000000
+    font-weight 700
+
+  h2
+    font-family 'Avenir', sans-serif
+    font-size 2.5em
+    font-weight 900
+    color #504550
+    line-height 1.3em
+
+    @media all and (max-width: 700px)
+      font-size 2em
+
+  h3
+    font-family 'Avenir', sans-serif
+    font-size 1.5em
+    margin 0.85rem 0
+    color #6A5B69
+    font-weight 600
+
+    @media all and (max-width: 700px)
+      font-size 1.4em
+
+    @media all and (max-width: 1200px)
+      font-size 1.1em
+
+  h4
+    font-size 3em
+    color #e86b37ed
+    font-weight 900
+
+    @media all and (max-width: 700px)
+      width 90%
+      font-size 1.5em
+
+    @media all and (max-width: 1200px)
+      font-size 2.5em
+      padding 20px 0
+      text-align center
+
+  img
+    width 100%
+    height 100%
+
+  ::-webkit-scrollbar
+    display none
+
+  .superFancyBlockquote
+  .header-one
+    color #999
+    font-family 'Hoefler Text', Georgia, serif
+    font-style italic
+    text-align center
+
+  @keyframes fade-in
+    from
+      opacity 0
+      transform translate3d(-2rem, 0, 0)
+
+    to
+      opacity 1
+      transform translate3d(0, 0, 0)

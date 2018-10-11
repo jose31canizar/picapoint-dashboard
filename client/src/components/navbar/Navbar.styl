@@ -1,0 +1,75 @@
+transform-squash(a)
+  transform scaleY(a) scaleX(a)
+
+.nav-bar
+  border-bottom 2px solid #fff
+  display flex
+  align-items center
+  height 4rem
+
+  @media all and (min-width: 1449px)
+    justify-content space-between
+    padding 1rem 25%
+
+  @media all and (max-width: 1450px)
+    justify-content space-evenly
+    padding 0
+
+  position fixed
+  z-index 5
+  background white
+  width 100vw
+
+  .navbar-logged-in-items
+    display flex
+    justify-content center
+    align-items center
+
+    .navbar-logged-in-item
+      padding 0 1rem
+      animation appear 0.2s
+
+  .nav-bar-title
+    font-size 1.3em
+    transition 0.5s ease-in-out
+    backface-visibility hidden
+    white-space nowrap
+    transform translateZ(0)
+    font-weight 900
+    -webkit-font-smoothing subpixel-antialiased
+
+  label
+    display block
+    font-size 0.75em
+    white-space nowrap
+
+  .dashboard-button:before
+    content '\f1fa'
+
+  #nav-bar-search-button
+    flex 0.5
+
+.nav-bar-mobile
+  padding 10px
+  border-bottom 2px solid black
+  display flex
+  justify-content center
+  align-items center
+  background white
+
+  a
+    margin-top 1rem
+
+  h2
+    transition 0.05s ease
+    font-size 1.3em
+    transition 0.2s ease-in-out
+    backface-visibility hidden
+    white-space nowrap
+    transform translateZ(0)
+    font-weight 900
+    -webkit-font-smoothing subpixel-antialiased
+    transform-squash(1)
+
+  .hide-nav-bar-title
+    transform-squash(0)
