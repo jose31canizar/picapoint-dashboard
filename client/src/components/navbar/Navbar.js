@@ -3,11 +3,11 @@ import "./Navbar.styl";
 import InputField from "../../items/input-field/InputField";
 import NavbarIcon from "./NavbarIcon";
 import { NavLink, Link, withRouter } from "react-router-dom";
-import Pages from "../../pages/Pages";
 import SignOutButton from "../signout/SignOutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AuthUserContext from "../AuthUserContext";
 import * as routes from "../../constants/routes";
+import SearchBar from "../../components/search-bar/SearchBar";
 
 class Navbar extends Component {
   constructor(props) {
@@ -19,8 +19,7 @@ class Navbar extends Component {
     super(props);
     this.state = {
       width: width,
-      panelState: this.props.panelState,
-      query: ""
+      panelState: this.props.panelState
     };
     this.handleResize = this.handleResize.bind(this);
   }
@@ -35,9 +34,8 @@ class Navbar extends Component {
   }
   onEnter = e => {
     const { history } = this.props;
-    const { query } = this.state;
     if (e.keyCode === 13) {
-      history.push(query);
+      // history.push(query);
     }
   };
   componentDidMount() {
@@ -63,26 +61,16 @@ class Navbar extends Component {
               </Link>
               {authUser ? (
                 <div class="navbar-logged-in-items">
-                  <InputField
+                  <SearchBar
                     placeholder="search"
                     label="filter"
-                    field="query"
                     text="search your dashboard..."
-                    setState={obj => this.setState(obj)}
-                    datalistName="sections"
-                    datalist={
-                      <datalist id="sections">
-                        {Pages.map((page, i) => (
-                          <option key={"option-" + i} value={page.path} />
-                        ))}
-                      </datalist>
-                    }
                   />
 
                   <NavLink
                     to={routes.HOME}
                     tabIndex="-1"
-                    class="navbar-logged-in-item"
+                    className="navbar-logged-in-item"
                   >
                     <FontAwesomeIcon icon="th" color="black" />
                   </NavLink>
@@ -90,7 +78,7 @@ class Navbar extends Component {
                   <NavLink
                     to="/account"
                     tabIndex="-1"
-                    class="navbar-logged-in-item"
+                    className="navbar-logged-in-item"
                   >
                     <label>Account</label>
                   </NavLink>

@@ -26,15 +26,17 @@ class Login extends Component {
     console.log(email, password);
 
     e.preventDefault();
-    fetch("http://localhost:9001/login", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    })
-      .then(res => auth.doSignInWithEmailAndPassword(email, password))
+    // fetch("http://localhost:9001/login", {
+    //   method: "post",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({ email, password })
+    // })
+    // .then(res =>
+    auth
+      .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE }, () => {
           history.push(HOME);

@@ -17,6 +17,7 @@ import ColorPicker, { colorPickerPlugin } from "draft-js-color-picker";
 import { db, storage } from "../../firebase";
 import Notification from "../../items/notification/Notification";
 import { Map } from "immutable";
+import { saveText } from "../../elasticsearch";
 
 const presetColors = [
   "#ff00aa",
@@ -242,7 +243,6 @@ class EditableTemplate extends Component {
     const { editing } = this.props;
 
     db.loadPageIfExists(editing).then(content => {
-      console.log(content);
       if (content) {
         this.setState({
           editorState: EditorState.createWithContent(convertFromRaw(content))
@@ -292,6 +292,7 @@ class EditableTemplate extends Component {
     let newState;
 
     if (command === "editor-save") {
+      saveText(editing, editorState.getCurrentContent().getPlainText());
       storage
         .savePage(
           editing,
@@ -388,25 +389,27 @@ class EditableTemplate extends Component {
         <div style={styles.editor} onClick={this.focus}>
           <Editor
             tabIndex="5"
-            blockStyleFn={getBlockStyle}
+            placeholder="Tell a story..."
+            editorState={editorState}
+            onChange={this.onChange}
             customStyleFn={this.picker.customStyleFn}
             customStyleMap={{ ...styleMap, ...colorStyleMap }}
-            editorState={editorState}
             handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}
             keyBindingFn={this.mapKeyToEditorCommand}
-            placeholder="Tell a story..."
             handleReturn={this.handleReturn}
             onTab={this.onTab}
             spellCheck={true}
             ref={ref => (this.editor = ref)}
-            blockRendererFn={blockRenderer}
           />
         </div>
       </div>
     );
   }
 }
+
+// blockStyleFn={getBlockStyle}
+//             blockRendererFn={blockRenderer}
+//             blockRenderMap={blockRenderMap}
 
 const authCondition = authUser => !!authUser;
 

@@ -11,6 +11,26 @@ import { stateToHTML } from "draft-js-export-html";
 import { styleMap, colorStyleMap } from "./EditableTemplate";
 import AuthUserContext from "../../components/AuthUserContext";
 
+function styleReducer(acc, style, i) {
+  switch (style[0]) {
+    case "H3":
+      return {
+        ...acc,
+        [style[0]]: {
+          attributes: { id: `scroll-item-${i}` },
+          style: style[1]
+        }
+      };
+    default:
+      return {
+        ...acc,
+        [style[0]]: {
+          style: style[1]
+        }
+      };
+  }
+}
+
 class ArticleTemplate extends Component {
   state = { markdown: "<p>loading...</p>", links: [], imageLink: null };
   componentDidMount() {
@@ -23,31 +43,28 @@ class ArticleTemplate extends Component {
               if (!data) {
                 return null;
               }
-              console.log(styleMap);
+
+              const customColorMap = data.blocks
+                .flatMap(block =>
+                  block.inlineStyleRanges.filter(range => {
+                    return range.style.startsWith("CUSTOM_COLOR");
+                  })
+                )
+                .reduce(
+                  (acc, r) => ({
+                    ...acc,
+                    [r.style]: { color: r.style.substring(13) }
+                  }),
+                  {}
+                );
 
               let newMap = Object.entries({
+                ...customColorMap,
                 ...styleMap,
                 ...colorStyleMap
-              }).reduce(
-                (acc, style, i) =>
-                  style[0] === "H3"
-                    ? {
-                        ...acc,
-                        [style[0]]: {
-                          element: style[0],
-                          attributes: { id: `scroll-item-${i}` },
-                          style: style[1]
-                        }
-                      }
-                    : {
-                        ...acc,
-                        [style[0]]: {
-                          element: style[0],
-                          style: style[1]
-                        }
-                      },
-                {}
-              );
+              }).reduce((acc, style, i) => styleReducer(acc, style, i), {});
+
+              console.log(newMap);
 
               let options = {
                 inlineStyles: newMap
@@ -61,7 +78,6 @@ class ArticleTemplate extends Component {
               }
               const { mediaItems } = this.state;
               let mediaItemNames = Object.keys(mediaItems);
-              console.log(mediaItemNames);
 
               let newMarkdown = mediaItemNames.reduce((acc, name) => {
                 const regex = new RegExp(`\\[${name}\\]`, "g");

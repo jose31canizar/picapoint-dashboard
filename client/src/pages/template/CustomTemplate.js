@@ -46,12 +46,8 @@ const UserList = ({ users }) => (
             <img src={users[key].profile.profile_picture} />
           </div>
           <div class="user-caption">
-            <p class="name" key={key}>
-              {users[key].name}
-            </p>
-            <p class="email" key={key}>
-              {users[key].email}
-            </p>
+            <p class="name">{users[key].name}</p>
+            <p class="email">{users[key].email}</p>
           </div>
         </div>
         <div class="user-actions">
