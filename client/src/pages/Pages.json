@@ -49,6 +49,15 @@
     "type": "markdown"
   },
   {
+    "path": "edit-print",
+    "title": "Edit Trykksaker",
+    "image": "color-burst",
+    "color": "#5B7B92",
+    "icon": "sticky-note",
+    "type": "editable",
+    "editing": "print"
+  },
+  {
     "path": "archive",
     "title": "Dokumentarkiv",
     "image": "color-burst",

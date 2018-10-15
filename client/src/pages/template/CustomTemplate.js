@@ -9,20 +9,45 @@ class CustomPage extends Component {
     users: null
   };
   componentDidMount() {
-    db.onceGetUsers().then(snapshot =>
+    db.onceGetUsers().then(snapshot => {
+      let data = snapshot.val();
+      console.log(Object.keys(data).map((key, i) => ({ ...data[key], id: i })));
+
       this.setState({
-        users: snapshot.val()
-      })
-    );
+        users: Object.keys(data).map((key, i) => ({
+          ...data[key],
+          id: i
+        }))
+      });
+    });
   }
+  handleReorder = () => {};
+  reorder = event => {
+    const { users } = this.state;
+    const movedItem = users.find((item, index) => index === event.oldIndex);
+    const remainingItems = users.filter(
+      (item, index) => index !== event.oldIndex
+    );
+
+    const reorderedItems = [
+      ...remainingItems.slice(0, event.newIndex),
+      movedItem,
+      ...remainingItems.slice(event.newIndex)
+    ];
+
+    console.log(event, reorderedItems);
+
+    this.setState({ users: reorderedItems });
+  };
   render() {
     const { className } = this.props;
     const { users } = this.state;
+    const { reorder } = this;
     return (
       <div class="custom-page">
         <section className={className}>
           {!!users ? (
-            <UserList users={users} />
+            <UserList users={users} reorder={reorder} />
           ) : (
             <div>
               <FontAwesomeIcon icon="fa-spinner" />
@@ -36,32 +61,52 @@ class CustomPage extends Component {
   }
 }
 
-const UserList = ({ users }) => (
-  <div class="user-list">
-    <h3>List of Users</h3>
-    {Object.keys(users).map(key => (
-      <div class="user" key={"user-" + key}>
-        <div class="user-info">
-          <div class="profile-picture">
-            <img src={users[key].profile.profile_picture} />
+class UserList extends Component {
+  state = {
+    oldIndex: -1,
+    newIndex: -1
+  };
+  render() {
+    const { users, reorder } = this.props;
+    const { oldIndex, newIndex } = this.state;
+    return (
+      <div class="user-list">
+        <h3>List of Users</h3>
+        {users.map(({ profile, name, email, id }, i) => (
+          <div
+            class="user"
+            key={"user-" + id}
+            draggable
+            onDragStart={() => this.setState({ oldIndex: i })}
+            onDragOver={e => {
+              e.preventDefault();
+              this.setState({ newIndex: i });
+            }}
+            onDrop={() => reorder({ oldIndex, newIndex })}
+          >
+            <div class="user-info">
+              <div class="profile-picture">
+                <img src={profile.profile_picture} />
+              </div>
+              <div class="user-caption">
+                <p class="name">{name}</p>
+                <p class="email">{email}</p>
+              </div>
+            </div>
+            <div class="user-actions">
+              <FontAwesomeIcon icon="angle-up" />
+              <FontAwesomeIcon icon="angle-down" />
+              <FontAwesomeIcon icon="lock" />
+              <FontAwesomeIcon icon="trash" />
+              <FontAwesomeIcon icon="times" />
+              <FontAwesomeIcon icon="bars" />
+            </div>
           </div>
-          <div class="user-caption">
-            <p class="name">{users[key].name}</p>
-            <p class="email">{users[key].email}</p>
-          </div>
-        </div>
-        <div class="user-actions">
-          <FontAwesomeIcon icon="angle-up" />
-          <FontAwesomeIcon icon="angle-down" />
-          <FontAwesomeIcon icon="lock" />
-          <FontAwesomeIcon icon="trash" />
-          <FontAwesomeIcon icon="times" />
-          <FontAwesomeIcon icon="bars" />
-        </div>
+        ))}
       </div>
-    ))}
-  </div>
-);
+    );
+  }
+}
 
 const authCondition = authUser => !!authUser;
 

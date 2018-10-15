@@ -38,7 +38,11 @@ class Home extends Component {
     return (
       <div class="home">
         <div class="header">
-          {name && <h2 class="home-header-title">Hei {name}</h2>}
+          {name ? (
+            <h2 class="home-header-title">{name}</h2>
+          ) : (
+            <h2>{"\u00A0"}</h2>
+          )}
 
           <p class="explanation">
             Her finner du guider og nedlastinger til å hjelpe deg i

@@ -21,7 +21,7 @@ const InputField = ({
       type={type}
       placeholder={placeholder}
       list={datalistName}
-      autocomplete={autocomplete}
+      autoComplete={autocomplete}
     />
     {datalist}
     {rightIcon}
