@@ -10,7 +10,7 @@ const InputField = ({
   rightIcon,
   datalist,
   datalistName,
-  autocomplete
+  autoComplete
 }) => (
   <div class="input-field-container">
     <label>{label}</label>
@@ -21,7 +21,7 @@ const InputField = ({
       type={type}
       placeholder={placeholder}
       list={datalistName}
-      autoComplete={autocomplete}
+      autoComplete={autoComplete}
     />
     {datalist}
     {rightIcon}

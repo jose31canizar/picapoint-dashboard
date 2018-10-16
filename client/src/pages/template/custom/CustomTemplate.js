@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import withAuthorization from "../../components/withAuthorization";
-import Footer from "../../layout/Footer";
-import { db } from "../../firebase";
+import withAuthorization from "../../../components/withAuthorization";
+import Footer from "../../../layout/Footer";
+import { db } from "../../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./CustomTemplate.styl";
 class CustomPage extends Component {

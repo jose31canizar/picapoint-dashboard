@@ -1,23 +1,25 @@
 import React, { Component } from "react";
-import withAuthorization from "../../components/withAuthorization";
+import withAuthorization from "../../../components/withAuthorization";
 import {
-  Editor,
   EditorState,
   RichUtils,
   Modifier,
   getDefaultKeyBinding,
   KeyBindingUtil,
   convertToRaw,
-  convertFromRaw
+  convertFromRaw,
+  CompositeDecorator,
+  Editor
 } from "draft-js";
 // import "draft-js/dist/Draft.css";
 import CodeUtils from "draft-js-code";
 import "./EditableTemplate.styl";
 import ColorPicker, { colorPickerPlugin } from "draft-js-color-picker";
-import { db, storage } from "../../firebase";
-import Notification from "../../items/notification/Notification";
+import { db, storage } from "../../../firebase";
+import Notification from "../../../items/notification/Notification";
 import { Map } from "immutable";
-import { saveText } from "../../elasticsearch";
+import { saveText } from "../../../elasticsearch";
+import { LinkPlugin, HashtagPlugin, testText } from "./Plugins";
 
 const presetColors = [
   "#ff00aa",
@@ -231,6 +233,7 @@ class EditableTemplate extends Component {
   getEditorState = () => this.state.editorState;
   onChange = editorState => this.setState({ editorState });
   picker = colorPickerPlugin(this.onChange, this.getEditorState);
+
   constructor(props) {
     super(props);
     this.state = {
@@ -244,8 +247,15 @@ class EditableTemplate extends Component {
 
     db.loadPageIfExists(editing).then(content => {
       if (content) {
+        const compositeDecorator = new CompositeDecorator([
+          LinkPlugin,
+          HashtagPlugin
+        ]);
         this.setState({
-          editorState: EditorState.createWithContent(convertFromRaw(content))
+          editorState: EditorState.createWithContent(
+            convertFromRaw(content),
+            compositeDecorator
+          )
         });
       }
     });
@@ -371,8 +381,58 @@ class EditableTemplate extends Component {
     return "handled";
   };
 
+  entityUpdate = contentStateWithEntity => {
+    const { editorState } = this.state;
+    const selectionState = editorState.getSelection();
+
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const contentStateWithLink = Modifier.applyEntity(
+      contentStateWithEntity,
+      selectionState,
+      entityKey
+    );
+
+    const newEditorState = EditorState.push(
+      editorState,
+      contentStateWithLink,
+      "create-link"
+    );
+
+    this.onChange(newEditorState);
+  };
+
+  createEntity = type => {
+    const { editorState } = this.state;
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+
+    const anchorKey = selectionState.getAnchorKey();
+    const currentContent = editorState.getCurrentContent();
+    const currentContentBlock = currentContent.getBlockForKey(anchorKey);
+    const start = selectionState.getStartOffset();
+    const end = selectionState.getEndOffset();
+    const selectedText = currentContentBlock.getText().slice(start, end);
+
+    let contentStateWithEntity;
+    if (testText(type, selectedText)) {
+      console.log("passed test");
+
+      contentStateWithEntity = contentState.createEntity(type, "IMMUTABLE", {
+        url: selectedText
+      });
+    } else {
+      console.log("failed test");
+      contentStateWithEntity = contentState.createEntity(type, "IMMUTABLE", {
+        url: "http://www.josecanizares.com"
+      });
+    }
+
+    this.entityUpdate(contentStateWithEntity);
+  };
+
   render() {
     const { editorState, savePageMessage } = this.state;
+
     return (
       <div class="article rich-editor" style={styles.root}>
         {savePageMessage && <Notification text={savePageMessage} />}
@@ -385,6 +445,8 @@ class EditableTemplate extends Component {
           editorState={editorState}
           onToggle={this.toggleInlineStyle}
         />
+        <button onClick={() => this.createEntity("LINK")}>Link</button>
+        <button onClick={() => this.createEntity("HASHTAG")}>Hashtag</button>
         <ColorControls editorState={editorState} onToggle={this.toggleColor} />
         <div style={styles.editor} onClick={this.focus}>
           <Editor

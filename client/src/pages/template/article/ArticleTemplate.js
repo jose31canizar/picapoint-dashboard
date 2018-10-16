@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import "./ArticleTemplate.styl";
-import SmoothScroll from "../../components/smooth-scroll/SmoothScroll";
-import withAuthorization from "../../components/withAuthorization";
-import Footer from "../../layout/Footer";
+import SmoothScroll from "../../../components/smooth-scroll/SmoothScroll";
+import withAuthorization from "../../../components/withAuthorization";
+import Footer from "../../../layout/Footer";
 import DOMPurify from "dompurify";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { convertFromRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import { stateToHTML } from "draft-js-export-html";
-import { styleMap, colorStyleMap } from "./EditableTemplate";
-import AuthUserContext from "../../components/AuthUserContext";
+import { styleMap, colorStyleMap } from "../editable/EditableTemplate";
+import AuthUserContext from "../../../components/AuthUserContext";
 
 function styleReducer(acc, style, i) {
   switch (style[0]) {
@@ -37,9 +37,12 @@ class ArticleTemplate extends Component {
     db.loadFolderIfExists("media").then(mediaItems => {
       this.setState({ mediaItems }, () => {
         const { path } = this.props;
+        console.log(path);
+
         if (path) {
           db.loadPageIfExists(path)
             .then(data => {
+              console.log("data", data);
               if (!data) {
                 return null;
               }
@@ -64,8 +67,6 @@ class ArticleTemplate extends Component {
                 ...colorStyleMap
               }).reduce((acc, style, i) => styleReducer(acc, style, i), {});
 
-              console.log(newMap);
-
               let options = {
                 inlineStyles: newMap
               };
@@ -77,6 +78,11 @@ class ArticleTemplate extends Component {
                 return null;
               }
               const { mediaItems } = this.state;
+              if (!mediaItems) {
+                this.setState({ markdown });
+                return null;
+              }
+
               let mediaItemNames = Object.keys(mediaItems);
 
               let newMarkdown = mediaItemNames.reduce((acc, name) => {
@@ -103,11 +109,12 @@ class ArticleTemplate extends Component {
                 }
               );
             })
-            .catch(err =>
+            .catch(err => {
+              console.log(err);
               this.setState({
                 markdown: "<p>This page does not exist yet.</p>"
-              })
-            );
+              });
+            });
         }
       });
     });

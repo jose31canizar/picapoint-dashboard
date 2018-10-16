@@ -38,7 +38,7 @@ export default class SearchBar extends Component {
           type="text"
           value={query}
           datalistName="sections"
-          autocomplete={false}
+          autoComplete="true"
           setState={obj => search(obj)}
           datalist={
             <datalist id="sections">

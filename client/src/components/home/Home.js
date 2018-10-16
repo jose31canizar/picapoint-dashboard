@@ -4,7 +4,7 @@ import SVG from "../../items/svg";
 import Pages from "../../pages/Pages";
 import { Link } from "react-router-dom";
 import Card from "../card/Card";
-import PageTemplate from "../../pages/template/PageTemplate";
+import PageTemplate from "../../pages/template/page/PageTemplate";
 import Footer from "../../layout/Footer";
 import withAuthorization from "../withAuthorization";
 import { db } from "../../firebase";
