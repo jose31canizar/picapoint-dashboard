@@ -18,6 +18,12 @@ const paths = require("./paths");
 const getClientEnvironment = require("./env");
 const getCacheIdentifier = require("react-dev-utils/getCacheIdentifier");
 const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
+const marked = require("marked");
+const renderer = new marked.Renderer();
+
+renderer.image = function(href, level) {
+  return `<img src="${href}" style="padding: 50px 0;"/>`;
+};
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.

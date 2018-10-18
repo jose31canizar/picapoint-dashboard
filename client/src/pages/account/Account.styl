@@ -1,0 +1,84 @@
+.account section.auth.container
+  position relative
+
+  @media all and (max-width: 1200px)
+    margin-top 5rem
+
+.page .account
+  display grid
+
+  @media all and (max-width: 1200px)
+    display block
+
+  grid-template-columns repeat(2, 1fr)
+  grid-template-rows repeat(2, 1fr)
+
+.account
+.profile-info
+  display flex
+  padding 2rem
+  justify-content center
+  align-items center
+  flex-direction column
+
+.account-profile
+  display flex
+  justify-content center
+  align-items center
+  padding 5rem
+  flex-direction column
+  flex-shrink 0
+
+input[type=file]
+  display none
+
+.media-uploader-container
+  padding 1rem
+  margin 1rem
+  cursor pointer
+
+  .file-upload-button
+    display block
+
+.profile-picture-container
+  width 5rem
+  height 5rem
+  border-radius 5rem
+  background black
+  position relative
+  overflow hidden
+  cursor pointer
+
+  img
+    object-fit cover
+
+  label
+    width 5rem
+    background #6969984f
+    height 5rem
+    display block
+    position absolute
+    border-radius 5rem
+    top 0
+
+  svg
+    position absolute
+    width 100% !important
+    height 100%
+    padding 1.5rem
+    pointer-events none
+
+    path
+      fill white
+
+.profile-picture-container:hover label
+  background rgba(255, 255, 255, 0.31)
+
+.profile-info
+  flex 1
+
+  h3
+    margin 0
+
+  h5
+    margin-top 1rem

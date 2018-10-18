@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Navbar.styl";
 import InputField from "../../items/input-field/InputField";
+import UserPages from "../../pages/UserPages.json";
 import NavbarIcon from "./NavbarIcon";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SignOutButton from "../signout/SignOutButton";
@@ -19,7 +20,8 @@ class Navbar extends Component {
     super(props);
     this.state = {
       width: width,
-      panelState: this.props.panelState
+      panelState: this.props.panelState,
+      dropdown: true
     };
     this.handleResize = this.handleResize.bind(this);
   }
@@ -49,7 +51,7 @@ class Navbar extends Component {
     window.removeEventListener("keypress", this.onEnter);
   }
   render() {
-    const { width } = this.state;
+    const { width, dropdown } = this.state;
     const { authUser, history } = this.props;
     if (width > 800) {
       return (
@@ -75,13 +77,29 @@ class Navbar extends Component {
                     <FontAwesomeIcon icon="th" color="black" />
                   </NavLink>
                   <SignOutButton className="navbar-logged-in-item" />
-                  <NavLink
-                    to="/account"
-                    tabIndex="-1"
-                    className="navbar-logged-in-item"
+
+                  <div
+                    class="dropdown-trigger"
+                    onMouseOver={() => this.setState({ dropdown: true })}
+                    onMouseLeave={() => this.setState({ dropdown: false })}
                   >
-                    <label>Account</label>
-                  </NavLink>
+                    <NavLink
+                      to="/account"
+                      tabIndex="-1"
+                      className="navbar-logged-in-item dropdown-trigger-label"
+                    >
+                      <label>Account</label>
+                    </NavLink>
+                    {dropdown && (
+                      <div class="dropdown-items">
+                        {UserPages.map(({ path, title }, i) => (
+                          <NavLink to={path} tabIndex="-1" class="navbar-item">
+                            <label>{title}</label>
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ) : null}
             </div>

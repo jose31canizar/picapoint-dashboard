@@ -325,6 +325,11 @@ class EditableTemplate extends Component {
       return "handled";
     }
 
+    if (command === "create-link") {
+      this.createEntity("LINK");
+      return "handled";
+    }
+
     if (CodeUtils.hasSelectionInBlock(editorState)) {
       newState = CodeUtils.handleKeyCommand(editorState, command);
     }
@@ -351,6 +356,10 @@ class EditableTemplate extends Component {
 
     if (e.keyCode === 83 && hasCommandModifier(e)) {
       return "editor-save";
+    }
+
+    if (e.keyCode === 76 && hasCommandModifier(e)) {
+      return "create-link";
     }
 
     if (!CodeUtils.hasSelectionInBlock(editorState))
@@ -420,14 +429,14 @@ class EditableTemplate extends Component {
       contentStateWithEntity = contentState.createEntity(type, "IMMUTABLE", {
         url: selectedText
       });
+      this.entityUpdate(contentStateWithEntity);
     } else {
       console.log("failed test");
-      contentStateWithEntity = contentState.createEntity(type, "IMMUTABLE", {
-        url: "http://www.josecanizares.com"
-      });
-    }
 
-    this.entityUpdate(contentStateWithEntity);
+      // contentStateWithEntity = contentState.createEntity(type, "IMMUTABLE", {
+      //   url: "http://www.josecanizares.com"
+      // });
+    }
   };
 
   render() {
@@ -445,8 +454,21 @@ class EditableTemplate extends Component {
           editorState={editorState}
           onToggle={this.toggleInlineStyle}
         />
-        <button onClick={() => this.createEntity("LINK")}>Link</button>
-        <button onClick={() => this.createEntity("HASHTAG")}>Hashtag</button>
+        <span class="entity-controls">
+          <span
+            class="create-entity-button"
+            onClick={() => this.createEntity("LINK")}
+          >
+            Link
+          </span>
+          <span
+            class="create-entity-button"
+            onClick={() => this.createEntity("HASHTAG")}
+          >
+            Hashtag
+          </span>
+        </span>
+
         <ColorControls editorState={editorState} onToggle={this.toggleColor} />
         <div style={styles.editor} onClick={this.focus}>
           <Editor

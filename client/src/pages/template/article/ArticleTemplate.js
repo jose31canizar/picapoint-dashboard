@@ -18,6 +18,7 @@ function styleReducer(acc, style, i) {
         ...acc,
         [style[0]]: {
           attributes: { id: `scroll-item-${i}` },
+          element: "H3",
           style: style[1]
         }
       };
@@ -101,6 +102,8 @@ class ArticleTemplate extends Component {
                   const collection = document
                     .querySelector("article")
                     .getElementsByTagName("H3");
+
+                  console.log("collection", collection);
 
                   const links = [].slice
                     .call(collection)

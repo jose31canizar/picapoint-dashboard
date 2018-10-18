@@ -5,7 +5,8 @@ import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Signup from "./components/signup/Signup";
 import PasswordForget from "./components/password-forget/PasswordForget";
-import Account from "./components/account/Account";
+import Account from "./pages/account/Account";
+import Profile from "./pages/profile/Profile";
 import Layout from "./layout/Layout";
 import Pages from "./pages/Pages";
 import Article from "./pages/template/article/ArticleTemplate";
@@ -83,6 +84,12 @@ class App extends Component {
                   key={location.pathname}
                 >
                   <Switch location={location}>
+                    <Route
+                      exact
+                      path={routes.PROFILE}
+                      panelState={panelState}
+                      render={() => <Profile />}
+                    />
                     {Pages.map((page, i) => (
                       <Route
                         key={i}

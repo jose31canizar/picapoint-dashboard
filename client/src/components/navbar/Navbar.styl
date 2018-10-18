@@ -20,6 +20,25 @@ transform-squash(a)
   background white
   width 100vw
 
+  .dropdown-trigger
+    position relative
+
+  .dropdown-trigger-label
+    padding 1rem
+
+  .dropdown-items
+    animation fade-in 0.5s
+    position absolute
+    padding 0 1rem
+    background-color white
+    width 100%
+
+    .navbar-item
+      margin 0 0.05rem
+
+      &:hover > label
+        color #ff7e7e
+
   .navbar-logged-in-items
     display flex
     justify-content center
@@ -27,6 +46,7 @@ transform-squash(a)
 
     .navbar-logged-in-item
       padding 0 1rem
+      display block
       animation appear 0.2s
 
   .nav-bar-title
